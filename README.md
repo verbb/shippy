@@ -1,7 +1,7 @@
 <p align="center"><img src="https://verbb.imgix.net/plugins/shippy/shippy-icon.svg" width="100" height="100" alt="Cloner icon"></p>
 <h1 align="center">Shippy</h1>
 
-Shippy is framework agnostic, multi-carrier shipping library for PHP. Its aim is to provide a consistent API around the many different shipping carriers for shipment rates, tracking, labels and more. It's free to use and doesn't require a subscription to SaaS providers.
+Shippy is a framework agnostic, multi-carrier shipping library for PHP. Its aim is to provide a consistent API around the many different shipping carriers for shipment rates, tracking, labels and more. It's free to use and doesn't require a subscription to SaaS providers.
 
 ## Install
 You can install the package via composer:
