@@ -1,0 +1,64 @@
+[
+    {
+        "title": "Get Started",
+        "collapsable": false,
+        "children": [
+            "get-started/installation",
+            "get-started/core-concepts",
+            "get-started/fetching-rates",
+            "get-started/tracking-status",
+            "get-started/creating-labels"
+        ]
+    },
+    {
+        "title": "Carriers",
+        "collapsable": false,
+        "children": [
+            "carriers/aramex",
+            "carriers/aramex-australia",
+            "carriers/australia-post",
+            "carriers/bring",
+            "carriers/canada-post",
+            "carriers/colissimo",
+            "carriers/dhl-express",
+            "carriers/fastway",
+            "carriers/fedex",
+            "carriers/fedex-freight",
+            "carriers/interparcel",
+            "carriers/new-zealand-post",
+            "carriers/post-nl",
+            "carriers/royal-mail",
+            "carriers/sendle",
+            "carriers/tnt-australia",
+            "carriers/ups",
+            "carriers/usps",
+            "carriers/custom-carrier"
+        ]
+    },
+    {
+        "title": "API",
+        "collapsable": false,
+        "children": [
+            "api/logging",
+            "api/events"
+        ]
+    },
+    {
+        "title": "Models",
+        "collapsable": false,
+        "children": [
+            "models/address",
+            "models/http-client",
+            "models/label",
+            "models/label-response",
+            "models/package",
+            "models/rate",
+            "models/rate-response",
+            "models/request",
+            "models/shipment",
+            "models/tracking",
+            "models/tracking-detail",
+            "models/tracking-response"
+        ]
+    }
+]
