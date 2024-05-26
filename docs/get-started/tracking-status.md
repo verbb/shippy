@@ -1,4 +1,4 @@
-## Tracking Status
+# Tracking Status
 Fetching the tracking status of a shipment doesn't require a [Shipment](docs:models/shipment) model. Instead, you can pick the carrier the shipment is for, and call `getTrackingStatus()` directly.
 
 ```php
