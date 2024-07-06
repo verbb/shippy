@@ -435,7 +435,6 @@ class UPS extends AbstractCarrier
             'StateProvinceCode' => $address->getStateProvince(),
             'PostalCode' => $address->getPostalCode(),
             'CountryCode' => $address->getCountryCode(),
-            'Residential' => $address->isResidential(),
         ];
 
         if ($address->isResidential()) {
