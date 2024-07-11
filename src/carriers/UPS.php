@@ -438,7 +438,7 @@ class UPS extends AbstractCarrier
         ];
 
         if ($address->isResidential()) {
-            $object['Residential'] = true;
+            $object['ResidentialAddressIndicator'] = true;
         }
 
         return $object;
