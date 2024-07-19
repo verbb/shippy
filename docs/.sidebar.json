@@ -16,6 +16,7 @@
         "children": [
             "carriers/aramex",
             "carriers/aramex-australia",
+            "carriers/aramex-new-zealand",
             "carriers/australia-post",
             "carriers/bring",
             "carriers/canada-post",

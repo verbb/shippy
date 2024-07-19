@@ -86,6 +86,7 @@ Shippy supports the following carriers and features.
 | ------------------- | :---: | :---: | :---: |
 | Aramex              | ☑️ | ☑️ |    |
 | Aramex Australia    | ☑️ | ☑️ | ☑️ |
+| Aramex New Zealand  | ☑️ | ☑️ | ☑️ |
 | Australia Post      | ☑️ | ☑️ | ☑️ |
 | Bring               | ☑️ | ☑️ | ☑️ |
 | Canada Post         | ☑️ | ☑️ | ☑️ |
