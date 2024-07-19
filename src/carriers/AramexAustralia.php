@@ -99,9 +99,9 @@ class AramexAustralia extends AbstractCarrier
             $rates[] = new Rate([
                 'carrier' => $this,
                 'response' => $data,
-                'serviceName' => '',
-                'serviceCode' => '',
-                'rate' => $rate,
+                'serviceName' => 'Postage',
+                'serviceCode' => 'Postage',
+                'rate' => round($rate, 2),
             ]);
         }
 
