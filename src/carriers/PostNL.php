@@ -31,7 +31,7 @@ class PostNL extends AbstractCarrier
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
-        return "https://mijnpakket.postnl.nl/Claim?Barcode=${trackingNumber}";
+        return "https://mijnpakket.postnl.nl/Claim?Barcode={$trackingNumber}";
     }
 
     public static function getServiceCodes(): array

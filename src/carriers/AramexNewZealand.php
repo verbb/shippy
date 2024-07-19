@@ -39,7 +39,7 @@ class AramexNewZealand extends AbstractCarrier
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
-        return "https://www.aramex.co.nz/tools/track?l=${trackingNumber}";
+        return "https://www.aramex.co.nz/tools/track?l={$trackingNumber}";
     }
 
 

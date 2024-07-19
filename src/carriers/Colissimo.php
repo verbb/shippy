@@ -31,7 +31,7 @@ class Colissimo extends AbstractCarrier
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
-        return "https://www.colissimo.fr/portail_colissimo/suivre.do?language=fr_FR&parcelnumber=${trackingNumber}";
+        return "https://www.colissimo.fr/portail_colissimo/suivre.do?language=fr_FR&parcelnumber={$trackingNumber}";
     }
 
     public static function getServiceCodes(): array

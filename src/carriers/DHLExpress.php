@@ -39,7 +39,7 @@ class DHLExpress extends AbstractCarrier
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
-        return "https://www.dhl.com/content/g0/en/express/tracking.shtml?brand=DHL&AWB=${trackingNumber}";
+        return "https://www.dhl.com/content/g0/en/express/tracking.shtml?brand=DHL&AWB={$trackingNumber}";
     }
 
     public static function getServiceCodes(): array

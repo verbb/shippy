@@ -39,7 +39,7 @@ class AramexAustralia extends AbstractCarrier
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
-        return "https://www.aramex.com.au/tools/track?l=${trackingNumber}";
+        return "https://www.aramex.com.au/tools/track?l={$trackingNumber}";
     }
 
 

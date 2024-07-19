@@ -39,7 +39,7 @@ class RoyalMail extends AbstractCarrier
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
-        return "https://www.royalmail.com/portal/rm/track?trackNumber=${trackingNumber}";
+        return "https://www.royalmail.com/portal/rm/track?trackNumber={$trackingNumber}";
     }
 
     public static function getServiceCodes(): array

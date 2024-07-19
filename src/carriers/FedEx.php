@@ -45,7 +45,7 @@ class FedEx extends AbstractCarrier
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
-        return "https://www.fedex.com/Tracking?action=track&tracknumbers=${trackingNumber}";
+        return "https://www.fedex.com/Tracking?action=track&tracknumbers={$trackingNumber}";
     }
 
     public static function getServiceCodes(): array

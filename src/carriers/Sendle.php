@@ -42,7 +42,7 @@ class Sendle extends AbstractCarrier
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
-        return "https://track.sendle.com/tracking?ref=${trackingNumber}";
+        return "https://track.sendle.com/tracking?ref={$trackingNumber}";
     }
 
 

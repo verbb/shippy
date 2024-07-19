@@ -38,7 +38,7 @@ class Aramex extends AbstractCarrier
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
-        return "https://www.aramex.com/tools/track?l=${trackingNumber}";
+        return "https://www.aramex.com/tools/track?l={$trackingNumber}";
     }
 
     public static function supportsLabels(): bool

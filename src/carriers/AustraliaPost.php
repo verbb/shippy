@@ -42,7 +42,7 @@ class AustraliaPost extends AbstractCarrier
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
-        return "https://auspost.com.au/track/track.html?id=${trackingNumber}";
+        return "https://auspost.com.au/track/track.html?id={$trackingNumber}";
     }
 
     public static function getServiceCodes(): array

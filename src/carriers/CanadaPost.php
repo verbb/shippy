@@ -39,7 +39,7 @@ class CanadaPost extends AbstractCarrier
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
-        return "https://www.canadapost.ca/cpotools/apps/track/personal/findByTrackNumber?trackingNumber=${trackingNumber}";
+        return "https://www.canadapost.ca/cpotools/apps/track/personal/findByTrackNumber?trackingNumber={$trackingNumber}";
     }
 
     public static function getServiceCodes(): array

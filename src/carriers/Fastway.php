@@ -39,7 +39,7 @@ class Fastway extends AbstractCarrier
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
-        return "https://fastway.com.au/courier-services/track-your-parcel?l=${trackingNumber}";
+        return "https://fastway.com.au/courier-services/track-your-parcel?l={$trackingNumber}";
     }
 
     public static function getServiceCodes(): array

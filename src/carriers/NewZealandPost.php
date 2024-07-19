@@ -44,7 +44,7 @@ class NewZealandPost extends AbstractCarrier
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
-        return "https://www.nzpost.co.nz/tools/tracking?trackid=${trackingNumber}";
+        return "https://www.nzpost.co.nz/tools/tracking?trackid={$trackingNumber}";
     }
 
 

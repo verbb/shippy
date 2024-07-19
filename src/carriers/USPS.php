@@ -39,7 +39,7 @@ class USPS extends AbstractCarrier
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
-        return "https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1=${trackingNumber}";
+        return "https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1={$trackingNumber}";
     }
 
     public static function getServiceCodes(): array

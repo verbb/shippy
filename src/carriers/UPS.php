@@ -40,7 +40,7 @@ class UPS extends AbstractCarrier
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
-        return "https://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=${trackingNumber}";
+        return "https://wwwapps.ups.com/WebTracking/track?track=yes&trackNums={$trackingNumber}";
     }
 
     public static function getServiceCodes(): array

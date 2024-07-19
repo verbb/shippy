@@ -38,7 +38,7 @@ class Interparcel extends AbstractCarrier
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
-        return "https://www.interparcel.com.au/tracking.php?action=dotrack&trackno=${trackingNumber}";
+        return "https://www.interparcel.com.au/tracking.php?action=dotrack&trackno={$trackingNumber}";
     }
 
     public static function supportsLabels(): bool

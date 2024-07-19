@@ -39,7 +39,7 @@ class Bring extends AbstractCarrier
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
-        return "https://tracking.bring.se/tracking.html?q=${trackingNumber}";
+        return "https://tracking.bring.se/tracking.html?q={$trackingNumber}";
     }
 
     public static function getServiceCodes(): array
