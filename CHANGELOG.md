@@ -2,7 +2,12 @@
 
 ## 1.0.3 - 2024-07-24
 
+### Changed
+- Update deprecated `${var}` in strings to `{$var}`.
 
+### Fixed
+- Fix Guzzle truncating error messages in responses.
+- Fix an error when catching Guzzle-based errors.
 
 ## 1.0.2 - 2024-07-19
 
