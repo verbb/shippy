@@ -1,6 +1,7 @@
 <?php
 namespace verbb\shippy\carriers;
 
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Arr;
 use Throwable;
 use verbb\shippy\Shippy;
