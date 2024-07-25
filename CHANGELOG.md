@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.4 - 2024-07-25
+
+### Fixed
+- Fix New Zealand Post package rounding for rates.
+- Fix packages not retaining destination weight/dimension units when being converted.
+
 ## 1.0.3 - 2024-07-24
 
 ### Changed
