@@ -46,6 +46,8 @@ class Package extends Model
             'length' => $length->toUnit($dimensionUnit),
             'height' => $height->toUnit($dimensionUnit),
             'price' => $this->price,
+            'weightUnit' => $weightUnit,
+            'dimensionUnit' => $dimensionUnit,
         ]);
     }
 
