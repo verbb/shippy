@@ -120,10 +120,10 @@ class NewZealandPost extends AbstractCarrier
                 'delivery_postcode' => $shipment->getTo()->getPostalCode(),
                 'delivery_country' => $shipment->getTo()->getCountryCode(),
                 'envelope_size' => 'ALL',
-                'length' => $shipment->getTotalLength($this),
-                'width' => $shipment->getTotalWidth($this),
-                'height' => $shipment->getTotalHeight($this),
-                'weight' => $shipment->getTotalWeight($this),
+                'length' => $shipment->getTotalLength($this, 0),
+                'width' => $shipment->getTotalWidth($this, 0),
+                'height' => $shipment->getTotalHeight($this, 0),
+                'weight' => $shipment->getTotalWeight($this, 0),
             ];
 
             $request = new Request([
@@ -140,10 +140,10 @@ class NewZealandPost extends AbstractCarrier
                 'format' => 'json',
                 'documents' => '',
                 'account_number' => $this->accountNumber,
-                'length' => $shipment->getTotalLength($this),
-                'width' => $shipment->getTotalWidth($this),
-                'height' => $shipment->getTotalHeight($this),
-                'weight' => $shipment->getTotalWeight($this),
+                'length' => $shipment->getTotalLength($this, 0),
+                'width' => $shipment->getTotalWidth($this, 0),
+                'height' => $shipment->getTotalHeight($this, 0),
+                'weight' => $shipment->getTotalWeight($this, 0),
             ];
 
             $request = new Request([
