@@ -1,7 +1,7 @@
 {
     "name": "verbb/shippy",
     "description": "A framework agnostic, multi-carrier shipping library for PHP.",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "keywords": [
         "australia-post",
         "auspost",

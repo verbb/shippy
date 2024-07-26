@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.5 - 2024-07-26
+
+### Added
+- Add `includeInsurance` for UPS packages.
+- Add `DeclaredValue` for UPS packages.
+
+### Fixed
+- Fix UPS `pickupType` reference.
+
 ## 1.0.4 - 2024-07-25
 
 ### Fixed
