@@ -127,6 +127,7 @@ class UPS extends AbstractCarrier
     protected ?string $clientSecret = null;
     protected ?string $accountNumber = null;
     protected ?string $pickupType = '01';
+    protected bool $includeInsurance = false;
     protected bool $addDeclaredValue = false;
 
     private array $pickupCodes = [
@@ -183,6 +184,17 @@ class UPS extends AbstractCarrier
     public function setPickupType(?string $pickupType): UPS
     {
         $this->pickupType = $pickupType;
+        return $this;
+    }
+
+    public function getIncludeInsurance(): bool
+    {
+        return $this->includeInsurance;
+    }
+
+    public function setIncludeInsurance(bool $includeInsurance): UPS
+    {
+        $this->includeInsurance = $includeInsurance;
         return $this;
     }
 
