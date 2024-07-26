@@ -127,6 +127,7 @@ class UPS extends AbstractCarrier
     protected ?string $clientSecret = null;
     protected ?string $accountNumber = null;
     protected ?string $pickupType = '01';
+    protected bool $addDeclaredValue = false;
 
     private array $pickupCodes = [
         '01' => 'Daily Pickup',
@@ -182,6 +183,17 @@ class UPS extends AbstractCarrier
     public function setPickupType(?string $pickupType): UPS
     {
         $this->pickupType = $pickupType;
+        return $this;
+    }
+
+    public function getAddDeclaredValue(): bool
+    {
+        return $this->addDeclaredValue;
+    }
+
+    public function getAddDeclaredValue(bool $addDeclaredValue): UPS
+    {
+        $this->addDeclaredValue = $addDeclaredValue;
         return $this;
     }
 
@@ -466,7 +478,7 @@ class UPS extends AbstractCarrier
     protected function getPackages(Shipment $shipment): array
     {
         return array_map(function($package) use ($shipment) {
-            return [
+            $providerPackage = [
                 'PackagingType' => [
                     'Code' => '02',
                 ],
@@ -485,6 +497,17 @@ class UPS extends AbstractCarrier
                     'Weight' => $package->getWeight(),
                 ],
             ];
+
+            if ($this->getAddDeclaredValue()) {
+                $providerPackage['PackageServiceOptions'] = [
+                    'DeclaredValue' => [
+                        'CurrencyCode' => $shipment->getCurrency(),
+                        'MonetaryValue' => (string)$package->getPrice(),
+                    ],
+                ];
+            }
+
+            return $providerPackage;
         }, $shipment->getPackages());
     }
 
