@@ -203,7 +203,7 @@ class UPS extends AbstractCarrier
         return $this->addDeclaredValue;
     }
 
-    public function getAddDeclaredValue(bool $addDeclaredValue): UPS
+    public function setAddDeclaredValue(bool $addDeclaredValue): UPS
     {
         $this->addDeclaredValue = $addDeclaredValue;
         return $this;
