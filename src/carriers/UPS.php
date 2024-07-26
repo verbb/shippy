@@ -219,7 +219,7 @@ class UPS extends AbstractCarrier
         $payload = [
             'RateRequest' => [
                 'PickupType' => [
-                    'Code' => $this->pickupType,
+                    'Code' => $this->getPickupType(),
                 ],
                 'Shipment' => [
                     'Shipper' => $this->getContact($shipment->getFrom()),
