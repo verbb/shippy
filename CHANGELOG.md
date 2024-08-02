@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.6 - 2024-08-03
+
+### Fixed
+- Fix rounding of parcel dimension and weights for Australia Post for more accurate rates.
+
 ## 1.0.5 - 2024-07-26
 
 ### Added
