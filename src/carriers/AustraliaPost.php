@@ -251,17 +251,17 @@ class AustraliaPost extends AbstractCarrier
                 $payload = [
                     'from_postcode' => $shipment->getFrom()->getPostalCode(),
                     'to_postcode' => $shipment->getTo()->getPostalCode(),
-                    'length' => $shipment->getTotalLength($this),
-                    'width' => $shipment->getTotalWidth($this),
-                    'height' => $shipment->getTotalHeight($this),
-                    'weight' => $shipment->getTotalWeight($this),
+                    'length' => $shipment->getTotalLength($this, 0),
+                    'width' => $shipment->getTotalWidth($this, 0),
+                    'height' => $shipment->getTotalHeight($this, 0),
+                    'weight' => $shipment->getTotalWeight($this, 0),
                 ];
             } else {
                 $endpoint = 'postage/parcel/international/service.json';
 
                 $payload = [
                     'country_code' => $shipment->getTo()->getCountryCode(),
-                    'weight' => $shipment->getTotalWeight($this),
+                    'weight' => $shipment->getTotalWeight($this, 0),
                 ];
             }
 
