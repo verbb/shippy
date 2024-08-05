@@ -227,6 +227,7 @@ class UPS extends AbstractCarrier
                     'ShipTo' => $this->getContact($shipment->getTo()),
                     'NumOfPieces' => count($shipment->getPackages()),
                     'Package' => $this->getPackages($shipment),
+                    'TaxInformationIndicator' => 'Y',
                 ],
             ],
         ];
@@ -263,8 +264,8 @@ class UPS extends AbstractCarrier
         $rates = [];
 
         foreach (Arr::get($data, 'RateResponse.RatedShipment', []) as $shippingRate) {
-            // Negotiated rates will be different to regular rates
-            $rate = Arr::get($shippingRate, 'NegotiatedRateCharges.TotalCharge.MonetaryValue', Arr::get($shippingRate, 'TotalCharges.MonetaryValue'));
+            // Negotiated rates will be different to regular rates, and we should also check for taxes included
+            $rate = Arr::get($shippingRate, 'NegotiatedRateCharges.TotalChargesWithTaxes.MonetaryValue') ?? Arr::get($shippingRate, 'NegotiatedRateCharges.TotalCharge.MonetaryValue') ?? Arr::get($shippingRate, 'TotalChargesWithTaxes.MonetaryValue') ?? Arr::get($shippingRate, 'TotalCharges.MonetaryValue');
 
             // Convert the service code to a nicer description
             $serviceRegion = Arr::get(self::getServiceCodes(), $shipment->getFrom()->getCountryCode(), Arr::get(self::getServiceCodes(), 'international'));
