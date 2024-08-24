@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.7 - 2024-08-25
+
+### Added
+- Add support for tax-inclusive rates for UPS, where applicable.
+
+### Changed
+- Improve USPS rates by not returning duplicate services (that have the same price, just different description).
+- Update USPS service codes for new API.
+
 ## 1.0.6 - 2024-08-03
 
 ### Fixed
