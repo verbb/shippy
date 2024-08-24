@@ -196,11 +196,19 @@ class USPS extends AbstractCarrier
         });
 
         $rates = [];
+        $processedRates = [];
 
         foreach (Arr::get($data, 'rateOptions', []) as $shippingRate) {
             $serviceCode = Arr::get($shippingRate, 'rates.0.mailClass', '');
             $serviceName = Arr::get($shippingRate, 'rates.0.description', '');
             $rate = Arr::get($shippingRate, 'rates.0.price', 0);
+
+            // We get duplicate rates (the same `price` and `mailClass`) but different description. Skip them.
+            $rateKey = $rate . '_' . $serviceCode;
+
+            if (isset($processedRates[$rateKey])) {
+                continue;
+            }
 
             $rates[] = new Rate([
                 'carrier' => $this,
@@ -209,6 +217,8 @@ class USPS extends AbstractCarrier
                 'serviceCode' => $serviceCode,
                 'rate' => $rate,
             ]);
+
+            $processedRates[$rateKey] = true;
         }
 
         return new RateResponse([
