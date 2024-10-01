@@ -206,19 +206,22 @@ class USPS extends AbstractCarrier
             // We get duplicate rates (the same `price` and `mailClass`) but different description. Skip them.
             $rateKey = $rate . '_' . $serviceCode;
 
-            if (isset($processedRates[$rateKey])) {
-                continue;
-            }
-
-            $rates[] = new Rate([
+            $processedRates[$serviceCode][] = new Rate([
                 'carrier' => $this,
                 'response' => $shippingRate,
                 'serviceName' => $serviceName,
                 'serviceCode' => $serviceCode,
                 'rate' => $rate,
             ]);
+        }
 
-            $processedRates[$rateKey] = true;
+        // There will be lots of rates per `mailClass`, so just return the cheapest for each
+        foreach ($processedRates as $serviceCode => $serviceProcessedRates) {
+            usort($serviceProcessedRates, function(Rate $a, Rate $b) {
+                return $a->getRate() <=> $b->getRate();
+            });
+
+            $rates[] = $serviceProcessedRates[0] ?? [];
         }
 
         return new RateResponse([
