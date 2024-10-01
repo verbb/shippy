@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.8 - 2024-10-01
+
+### Changed
+- Change USPS behaviour to now only return the cheapest rate for the same service code to prevent unnecessary duplicate rates.
+
+### Fixed
+- Fix USPS rates not using a minimum dimension/weight value for packages.
+
 ## 1.0.7 - 2024-08-25
 
 ### Added
