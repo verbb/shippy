@@ -186,7 +186,7 @@ class Shipment extends Model
         return $packages;
     }
 
-    public function getTotalWeight(CarrierInterface $carrier, int $decimals = 2): int
+    public function getTotalWeight(CarrierInterface $carrier, int $decimals = 2): int|float
     {
         $total = 0;
 
@@ -197,7 +197,7 @@ class Shipment extends Model
         return $total;
     }
 
-    public function getTotalWidth(CarrierInterface $carrier, int $decimals = 2, bool $stacked = true): int
+    public function getTotalWidth(CarrierInterface $carrier, int $decimals = 2, bool $stacked = true): int|float
     {
         $total = 0;
 
@@ -213,7 +213,7 @@ class Shipment extends Model
         return $total;
     }
 
-    public function getTotalHeight(CarrierInterface $carrier, int $decimals = 2, bool $stacked = false): int
+    public function getTotalHeight(CarrierInterface $carrier, int $decimals = 2, bool $stacked = false): int|float
     {
         $total = 0;
 
@@ -229,7 +229,7 @@ class Shipment extends Model
         return $total;
     }
 
-    public function getTotalLength(CarrierInterface $carrier, int $decimals = 2, bool $stacked = true): int
+    public function getTotalLength(CarrierInterface $carrier, int $decimals = 2, bool $stacked = true): int|float
     {
         $total = 0;
 

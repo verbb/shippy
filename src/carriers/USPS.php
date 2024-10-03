@@ -160,10 +160,10 @@ class USPS extends AbstractCarrier
             'mailingDate' => $shipDate,
             'accountType' => 'EPS',
             'accountNumber' => $this->accountNumber,
-            'length' => max((float)$shipment->getTotalLength($this, 0), 0.1),
-            'width' => max((float)$shipment->getTotalWidth($this, 0), 0.1),
-            'height' => max((float)$shipment->getTotalHeight($this, 0), 0.1),
-            'weight' => max((float)$shipment->getTotalWeight($this, 0), 0.1),
+            'length' => max($shipment->getTotalLength($this, 2), 0.1),
+            'width' => max($shipment->getTotalWidth($this, 2), 0.1),
+            'height' => max($shipment->getTotalHeight($this, 2), 0.1),
+            'weight' => max($shipment->getTotalWeight($this, 2), 0.1),
         ];
 
         if (self::isDomestic($shipment->getTo()->getCountryCode())) {
