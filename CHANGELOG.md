@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.10 - 2024-10-03
+
+### Fixed
+- Fix total-value package functions enforcing integer values.
+
 ## 1.0.9 - 2024-10-03
 
 ### Changed
