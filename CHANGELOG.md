@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.9 - 2024-10-03
+
+### Changed
+- Update `getTotalWidth` and `getTotalLength` function to assume multiple boxes will be stacked for better rate handling.
+
 ## 1.0.8 - 2024-10-01
 
 ### Changed
