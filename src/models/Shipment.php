@@ -197,34 +197,49 @@ class Shipment extends Model
         return $total;
     }
 
-    public function getTotalWidth(CarrierInterface $carrier, int $decimals = 2): int
+    public function getTotalWidth(CarrierInterface $carrier, int $decimals = 2, bool $stacked = true): int
     {
         $total = 0;
 
         foreach ($this->getPackagesForCarrier($carrier) as $package) {
-            $total += $package->getWidth($decimals);
+            // Even when dealing with totals, we assume a "stacked" approach for multiple boxes
+            if ($stacked) {
+                $total = max($total, $package->getWidth($decimals));
+            } else {
+                $total += $package->getWidth($decimals);
+            }
         }
 
         return $total;
     }
 
-    public function getTotalHeight(CarrierInterface $carrier, int $decimals = 2): int
+    public function getTotalHeight(CarrierInterface $carrier, int $decimals = 2, bool $stacked = false): int
     {
         $total = 0;
 
         foreach ($this->getPackagesForCarrier($carrier) as $package) {
-            $total += $package->getHeight($decimals);
+            // Even when dealing with totals, we assume a "stacked" approach for multiple boxes
+            if ($stacked) {
+                $total = max($total, $package->getHeight($decimals));
+            } else {
+                $total += $package->getHeight($decimals);
+            }
         }
 
         return $total;
     }
 
-    public function getTotalLength(CarrierInterface $carrier, int $decimals = 2): int
+    public function getTotalLength(CarrierInterface $carrier, int $decimals = 2, bool $stacked = true): int
     {
         $total = 0;
 
         foreach ($this->getPackagesForCarrier($carrier) as $package) {
-            $total += $package->getLength($decimals);
+            // Even when dealing with totals, we assume a "stacked" approach for multiple boxes
+            if ($stacked) {
+                $total = max($total, $package->getLength($decimals));
+            } else {
+                $total += $package->getLength($decimals);
+            }
         }
 
         return $total;
