@@ -40,7 +40,7 @@ class StaticRates
                 $items = new ItemList();
 
                 $items->insert(new PackageItem([
-                    'width' => $package->getWeight(),
+                    'width' => $package->getWidth(),
                     'length' => $package->getLength(),
                     'depth' => $package->getHeight(),
                     'weight' => $package->getWeight(),
