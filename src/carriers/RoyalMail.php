@@ -118,6 +118,17 @@ class RoyalMail extends AbstractCarrier
         return $this;
     }
 
+    public function getRatesType(): ?string
+    {
+        return $this->ratesType;
+    }
+
+    public function setRatesType(?string $ratesType): RoyalMail
+    {
+        $this->ratesType = $ratesType;
+        return $this;
+    }
+
     public function getClickAndDropApiKey(): ?string
     {
         return $this->clickAndDropApiKey;

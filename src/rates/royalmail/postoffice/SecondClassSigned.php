@@ -1,9 +1,9 @@
 <?php
-namespace verbb\shippy\rates\royalmail;
+namespace verbb\shippy\rates\royalmail\postoffice;
 
 use verbb\shippy\carriers\RoyalMailRates;
 
-class Tracked24 extends RoyalMailRates
+class SecondClassSigned extends RoyalMailRates
 {
     // Static Methods
     // =========================================================================
@@ -18,56 +18,68 @@ class Tracked24 extends RoyalMailRates
 
         $bands = [
             '2024' => [
+                self::LETTER => [
+                    100 => 85,
+                ],
                 self::LARGE_LETTER => [
-                    750 => 350,
+                    100 => 155,
+                    250 => 210,
+                    500 => 250,
+                    750 => 270,
                 ],
                 self::SMALL_PARCEL_WIDE => [
-                    2000 => 479,
+                    2000 => 369,
                 ],
                 self::SMALL_PARCEL_DEEP => [
-                    2000 => 479,
+                    2000 => 369,
                 ],
                 self::SMALL_PARCEL_BIGGER => [
-                    2000 => 479,
+                    2000 => 369,
                 ],
                 self::MEDIUM_PARCEL => [
-                    2000 => 709,
-                    10000 => 879,
-                    20000 => 1289,
-                ],
-                self::TUBE => [
-                    2000 => 709,
-                    10000 => 879,
-                    20000 => 1289,
+                    1000 => 589,
+                    2000 => 589,
+                    5000 => 739,
+                    10000 => 739,
+                    20000 => 1099,
                 ],
             ],
             '2024-10' => [
+                self::LETTER => [
+                    100 => 85,
+                ],
                 self::LARGE_LETTER => [
-                    750 => 360,
+                    100 => 155,
+                    250 => 210,
+                    500 => 250,
+                    750 => 270,
                 ],
                 self::SMALL_PARCEL_WIDE => [
-                    2000 => 499,
+                    2000 => 375,
                 ],
                 self::SMALL_PARCEL_DEEP => [
-                    2000 => 499,
+                    2000 => 375,
                 ],
                 self::SMALL_PARCEL_BIGGER => [
-                    2000 => 499,
+                    2000 => 375,
                 ],
                 self::MEDIUM_PARCEL => [
-                    2000 => 729,
-                    10000 => 899,
-                    20000 => 1349,
-                ],
-                self::TUBE => [
-                    2000 => 729,
-                    10000 => 899,
-                    20000 => 1349,
+                    1000 => 615,
+                    2000 => 615,
+                    5000 => 765,
+                    10000 => 765,
+                    20000 => 1155,
                 ],
             ],
         ];
 
         $boxes = [
+            self::LETTER => [
+                'length' => 240,
+                'width' => 165,
+                'height' => 5,
+                'weight' => 100,
+            ],
             self::LARGE_LETTER => [
                 'length' => 353,
                 'width' => 250,
@@ -98,14 +110,32 @@ class Tracked24 extends RoyalMailRates
                 'height' => 460,
                 'weight' => 20000,
             ],
-            self::TUBE => [
-                'length' => 900,
-                'width' => 70,
-                'height' => 70,
-                'weight' => 2000,
-            ],
         ];
 
-        return self::getBoxPricing($boxes, $bands, 100);
+        $boxPricing = self::getBoxPricing($boxes, $bands, 50);
+
+        $signedForCost = self::getValueForYear([
+            '2024' => 170,
+            '2024-10' => 170,
+        ]);
+
+        $signedForPackageCost = self::getValueForYear([
+            '2024' => 140,
+            '2024-10' => 140,
+        ]);
+
+        foreach ($boxPricing as $key => &$box) {
+            if (str_contains($key, 'letter-')) {
+                $additionalCost = $signedForCost;
+            } else {
+                $additionalCost = $signedForPackageCost;
+            }
+
+            if ($additionalCost) {
+                $box['price'] += $additionalCost;
+            }
+        }
+
+        return $boxPricing;
     }
 }

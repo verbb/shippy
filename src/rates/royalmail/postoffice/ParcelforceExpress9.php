@@ -1,9 +1,9 @@
 <?php
-namespace verbb\shippy\rates\royalmail;
+namespace verbb\shippy\rates\royalmail\postoffice;
 
 use verbb\shippy\carriers\RoyalMailRates;
 
-class ParcelforceExpressAm extends RoyalMailRates
+class ParcelforceExpress9 extends RoyalMailRates
 {
     // Static Methods
     // =========================================================================
@@ -19,13 +19,13 @@ class ParcelforceExpressAm extends RoyalMailRates
         $bands = [
             '2024' => [
                 'packet-200' => [
-                    2000 => 1745,
-                    5000 => 1745,
-                    10000 => 2045,
-                    15000 => 2395,
-                    20000 => 2395,
-                    25000 => 2795,
-                    30000 => 2795,
+                    2000 => 5745,
+                    5000 => 5745,
+                    10000 => 6545,
+                    15000 => 7395,
+                    20000 => 7395,
+                    25000 => 8795,
+                    30000 => 8795,
                 ],
             ],
         ];
@@ -36,6 +36,7 @@ class ParcelforceExpressAm extends RoyalMailRates
                 'width' => 750,
                 'height' => 750,
                 'weight' => 30000,
+                'itemValue' => 500,
             ],
         ];
 

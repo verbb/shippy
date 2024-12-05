@@ -111,9 +111,10 @@ class RoyalMailRates extends StaticRates
         self::$shipment = $shipment;
         self::$checkCompensation = $carrier->isCheckCompensation();
         self::$includeVat = $carrier->isIncludeVat();
+        self::$ratesType = $carrier->getRatesType();
 
         // Resolve the class dynamically
-        $className = 'verbb\\shippy\\rates\\royalmail\\' . StringHelper::toPascalCase($serviceCode);
+        $className = 'verbb\\shippy\\rates\\royalmail\\' . self::$ratesType . '\\' . StringHelper::toPascalCase($serviceCode);
 
         if (class_exists($className)) {
             $rateClass = new $className();
@@ -135,7 +136,7 @@ class RoyalMailRates extends StaticRates
         // Given the box rates, ensure that we only return rates that the supplied shipment can fit in
         return self::getRateFromBoxRates($shipment, $carrier, $boxRates, $serviceCode);
     }
-    
+
 
     // Protected Methods
     // =========================================================================

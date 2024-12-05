@@ -1,5 +1,5 @@
 <?php
-namespace verbb\shippy\rates\royalmail;
+namespace verbb\shippy\rates\royalmail\postoffice;
 
 use verbb\shippy\carriers\RoyalMailRates;
 

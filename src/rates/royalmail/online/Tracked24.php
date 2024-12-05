@@ -1,9 +1,9 @@
 <?php
-namespace verbb\shippy\rates\royalmail;
+namespace verbb\shippy\rates\royalmail\online;
 
 use verbb\shippy\carriers\RoyalMailRates;
 
-class Tracked48 extends RoyalMailRates
+class Tracked24 extends RoyalMailRates
 {
     // Static Methods
     // =========================================================================
@@ -19,50 +19,50 @@ class Tracked48 extends RoyalMailRates
         $bands = [
             '2024' => [
                 self::LARGE_LETTER => [
-                    750 => 270,
+                    750 => 350,
                 ],
                 self::SMALL_PARCEL_WIDE => [
-                    2000 => 389,
+                    2000 => 419,
                 ],
                 self::SMALL_PARCEL_DEEP => [
-                    2000 => 389,
+                    2000 => 419,
                 ],
                 self::SMALL_PARCEL_BIGGER => [
-                    2000 => 389,
+                    2000 => 419,
                 ],
                 self::MEDIUM_PARCEL => [
-                    2000 => 629,
-                    10000 => 779,
-                    20000 => 1139,
+                    2000 => 589,
+                    10000 => 759,
+                    20000 => 1169,
                 ],
                 self::TUBE => [
-                    2000 => 629,
-                    10000 => 779,
-                    20000 => 1139,
+                    2000 => 589,
+                    10000 => 759,
+                    20000 => 1169,
                 ],
             ],
             '2024-10' => [
                 self::LARGE_LETTER => [
-                    750 => 280,
+                    750 => 350,
                 ],
                 self::SMALL_PARCEL_WIDE => [
-                    2000 => 395,
+                    2000 => 425,
                 ],
                 self::SMALL_PARCEL_DEEP => [
-                    2000 => 395,
+                    2000 => 425,
                 ],
                 self::SMALL_PARCEL_BIGGER => [
-                    2000 => 395,
+                    2000 => 425,
                 ],
                 self::MEDIUM_PARCEL => [
-                    2000 => 645,
-                    10000 => 795,
-                    20000 => 1185,
+                    2000 => 599,
+                    10000 => 769,
+                    20000 => 1219,
                 ],
                 self::TUBE => [
-                    2000 => 645,
-                    10000 => 795,
-                    20000 => 1185,
+                    2000 => 599,
+                    10000 => 769,
+                    20000 => 1219,
                 ],
             ],
         ];
@@ -106,6 +106,6 @@ class Tracked48 extends RoyalMailRates
             ],
         ];
 
-        return self::getBoxPricing($boxes, $bands, 100);
+        return self::getBoxPricing($boxes, $bands, 150);
     }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace verbb\shippy\rates\royalmail;
+namespace verbb\shippy\rates\royalmail\online;
 
 use verbb\shippy\carriers\RoyalMailRates;
 
@@ -23,24 +23,28 @@ class FirstClassSigned extends RoyalMailRates
                 ],
                 self::LARGE_LETTER => [
                     100 => 210,
-                    250 => 290,
-                    500 => 350,
-                    750 => 350,
+                    250 => 270,
+                    500 => 330,
+                    750 => 330,
                 ],
                 self::SMALL_PARCEL_WIDE => [
-                    2000 => 459,
+                    1000 => 399,
+                    2000 => 399,
                 ],
                 self::SMALL_PARCEL_DEEP => [
-                    2000 => 459,
+                    1000 => 399,
+                    2000 => 399,
                 ],
                 self::SMALL_PARCEL_BIGGER => [
-                    2000 => 459,
+                    1000 => 399,
+                    2000 => 399,
                 ],
                 self::MEDIUM_PARCEL => [
-                    2000 => 669,
-                    5000 => 839,
-                    10000 => 839,
-                    20000 => 1249,
+                    1000 => 549,
+                    2000 => 549,
+                    5000 => 719,
+                    10000 => 719,
+                    20000 => 1129,
                 ],
             ],
             '2024-10' => [
@@ -48,25 +52,29 @@ class FirstClassSigned extends RoyalMailRates
                     100 => 165,
                 ],
                 self::LARGE_LETTER => [
-                    100 => 260,
-                    250 => 350,
-                    500 => 350,
-                    750 => 350,
+                    100 => 250,
+                    250 => 330,
+                    500 => 330,
+                    750 => 330,
                 ],
                 self::SMALL_PARCEL_WIDE => [
-                    2000 => 479,
+                    1000 => 409,
+                    2000 => 409,
                 ],
                 self::SMALL_PARCEL_DEEP => [
-                    2000 => 479,
+                    1000 => 409,
+                    2000 => 409,
                 ],
                 self::SMALL_PARCEL_BIGGER => [
-                    2000 => 479,
+                    1000 => 409,
+                    2000 => 409,
                 ],
                 self::MEDIUM_PARCEL => [
-                    2000 => 699,
-                    5000 => 869,
-                    10000 => 869,
-                    20000 => 1319,
+                    1000 => 569,
+                    2000 => 569,
+                    5000 => 739,
+                    10000 => 739,
+                    20000 => 1189,
                 ],
             ],
         ];
@@ -114,12 +122,10 @@ class FirstClassSigned extends RoyalMailRates
 
         $signedForCost = self::getValueForYear([
             '2024' => 170,
-            '2024-10' => 170,
         ]);
 
         $signedForPackageCost = self::getValueForYear([
             '2024' => 140,
-            '2024-10' => 140,
         ]);
 
         foreach ($boxPricing as $key => &$box) {
