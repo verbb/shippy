@@ -32,6 +32,7 @@ class RoyalMailRates extends StaticRates
     public static Shipment $shipment;
     public static bool $checkCompensation = false;
     public static bool $includeVat = false;
+    public static string $ratesType = 'online';
 
     protected static array $euro = ['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GR', 'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK'];
 

@@ -87,6 +87,7 @@ class RoyalMail extends AbstractCarrier
     protected ?string $clientId = null;
     protected ?string $clientSecret = null;
     protected ?string $clickAndDropApiKey = null;
+    protected ?string $ratesType = 'online';
     protected bool $acceptTerms = true;
     protected bool $checkCompensation = true;
     protected bool $includeVat = true;
