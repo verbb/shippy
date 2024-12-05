@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.11 - 2024-12-05
+
+### Added
+- Add 2024 pricing for Royal Mail.
+- Add constants for Royal Mail.
+
+### Fixed
+- Fix an error with box-packing for static rates.
+- Fix static rates box-sizing not working correctly.
+
 ## 1.0.10 - 2024-10-03
 
 ### Fixed
