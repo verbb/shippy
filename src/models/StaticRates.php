@@ -51,7 +51,7 @@ class StaticRates
                 $volumePacker = new VolumePacker($box, $items);
                 $packedBox = $volumePacker->pack();
 
-                if ($packedBox->getItems()) {
+                if ($packedBox->getItems()->count()) {
                     // Accumulate the price of each box from the carrier to handle multiple packages.
                     $rate += $packedBox->getBox()->getPrice();
 
