@@ -8,6 +8,23 @@ use verbb\shippy\models\StaticRates;
 
 class RoyalMailRates extends StaticRates
 {
+    // Constants
+    // =========================================================================
+
+    const LETTER = 'letter';
+    const LARGE_LETTER = 'large-letter';
+    const SMALL_PARCEL_WIDE = 'small-parcel-wide';
+    const SMALL_PARCEL_DEEP = 'small-parcel-deep';
+    const SMALL_PARCEL_BIGGER = 'small-parcel-bigger';
+    const TUBE = 'tube';
+    const MEDIUM_PARCEL = 'medium-parcel';
+    const LONG_PARCEL = 'long-parcel';
+    const SQUARE_PARCEL = 'square-parcel';
+    const PACKET = 'packet';
+    const PARCEL = 'parcel';
+    const PRINTED_PAPERS = 'printed-papers';
+
+
     // Properties
     // =========================================================================
 
@@ -41,35 +58,41 @@ class RoyalMailRates extends StaticRates
     ];
 
     protected static array $internationalDefaultBox = [
-        'letter' => [
+        static::LETTER => [
             'length' => 240,
             'width' => 165,
             'height' => 5,
             'weight' => 100,
         ],
-        'large-letter' => [
+        static::LARGE_LETTER => [
             'length' => 353,
             'width' => 250,
             'height' => 25,
             'weight' => 750,
         ],
-        'long-parcel' => [
+        static::LONG_PARCEL => [
             'length' => 600,
             'width' => 150,
             'height' => 150,
             'weight' => 2000,
         ],
-        'square-parcel' => [
+        static::SQUARE_PARCEL => [
             'length' => 300,
             'width' => 300,
             'height' => 300,
             'weight' => 2000,
         ],
-        'parcel' => [
+        static::PARCEL => [
             'length' => 450,
             'width' => 225,
             'height' => 225,
             'weight' => 2000,
+        ],
+        static::MEDIUM_PARCEL => [
+            'length' => 610,
+            'width' => 460,
+            'height' => 460,
+            'weight' => 20000,
         ],
     ];
 
@@ -123,28 +146,28 @@ class RoyalMailRates extends StaticRates
 
         $bands = [
             '2023' => [
-                'letter' => [
+                static::LETTER => [
                     100 => 110,
                 ],
-                'large-letter' => [
+                static::LARGE_LETTER => [
                     100 => 160,
                     250 => 225,
                     500 => 295,
                     750 => 330,
                 ],
-                'small-parcel-wide' => [
+                static::SMALL_PARCEL_WIDE => [
                     1000 => 419,
                     2000 => 419,
                 ],
-                'small-parcel-deep' => [
+                static::SMALL_PARCEL_DEEP => [
                     1000 => 419,
                     2000 => 419,
                 ],
-                'small-parcel-bigger' => [
+                static::SMALL_PARCEL_BIGGER => [
                     1000 => 419,
                     2000 => 419,
                 ],
-                'medium-parcel' => [
+                static::MEDIUM_PARCEL => [
                     1000 => 629,
                     2000 => 629,
                     5000 => 799,
@@ -155,37 +178,37 @@ class RoyalMailRates extends StaticRates
         ];
 
         $boxes = [
-            'letter' => [
+            static::LETTER => [
                 'length' => 240,
                 'width' => 165,
                 'height' => 5,
                 'weight' => 100,
             ],
-            'large-letter' => [
+            static::LARGE_LETTER => [
                 'length' => 353,
                 'width' => 250,
                 'height' => 25,
                 'weight' => 750,
             ],
-            'small-parcel-wide' => [
+            static::SMALL_PARCEL_WIDE => [
                 'length' => 450,
                 'width' => 350,
                 'height' => 80,
                 'weight' => 2000,
             ],
-            'small-parcel-deep' => [
+            static::SMALL_PARCEL_DEEP => [
                 'length' => 350,
                 'width' => 250,
                 'height' => 160,
                 'weight' => 2000,
             ],
-            'small-parcel-bigger' => [
+            static::SMALL_PARCEL_BIGGER => [
                 'length' => 450,
                 'width' => 350,
                 'height' => 160,
                 'weight' => 2000,
             ],
-            'medium-parcel' => [
+            static::MEDIUM_PARCEL => [
                 'length' => 610,
                 'width' => 460,
                 'height' => 460,
@@ -206,28 +229,28 @@ class RoyalMailRates extends StaticRates
 
         $bands = [
             '2023' => [
-                'letter' => [
+                static::LETTER => [
                     100 => 110,
                 ],
-                'large-letter' => [
+                static::LARGE_LETTER => [
                     100 => 160,
                     250 => 225,
                     500 => 295,
                     750 => 330,
                 ],
-                'small-parcel-wide' => [
+                static::SMALL_PARCEL_WIDE => [
                     1000 => 419,
                     2000 => 419,
                 ],
-                'small-parcel-deep' => [
+                static::SMALL_PARCEL_DEEP => [
                     1000 => 419,
                     2000 => 419,
                 ],
-                'small-parcel-bigger' => [
+                static::SMALL_PARCEL_BIGGER => [
                     1000 => 419,
                     2000 => 419,
                 ],
-                'medium-parcel' => [
+                static::MEDIUM_PARCEL => [
                     1000 => 629,
                     2000 => 629,
                     5000 => 799,
@@ -238,37 +261,37 @@ class RoyalMailRates extends StaticRates
         ];
 
         $boxes = [
-            'letter' => [
+            static::LETTER => [
                 'length' => 240,
                 'width' => 165,
                 'height' => 5,
                 'weight' => 100,
             ],
-            'large-letter' => [
+            static::LARGE_LETTER => [
                 'length' => 353,
                 'width' => 250,
                 'height' => 25,
                 'weight' => 750,
             ],
-            'small-parcel-wide' => [
+            static::SMALL_PARCEL_WIDE => [
                 'length' => 450,
                 'width' => 350,
                 'height' => 80,
                 'weight' => 2000,
             ],
-            'small-parcel-deep' => [
+            static::SMALL_PARCEL_DEEP => [
                 'length' => 350,
                 'width' => 250,
                 'height' => 160,
                 'weight' => 2000,
             ],
-            'small-parcel-bigger' => [
+            static::SMALL_PARCEL_BIGGER => [
                 'length' => 450,
                 'width' => 350,
                 'height' => 160,
                 'weight' => 2000,
             ],
-            'medium-parcel' => [
+            static::MEDIUM_PARCEL => [
                 'length' => 610,
                 'width' => 460,
                 'height' => 460,
@@ -314,28 +337,28 @@ class RoyalMailRates extends StaticRates
 
         $bands = [
             '2023' => [
-                'letter' => [
+                static::LETTER => [
                     100 => 75,
                 ],
-                'large-letter' => [
+                static::LARGE_LETTER => [
                     100 => 115,
                     250 => 185,
                     500 => 240,
                     750 => 270,
                 ],
-                'small-parcel-wide' => [
+                static::SMALL_PARCEL_WIDE => [
                     1000 => 349,
                     2000 => 349,
                 ],
-                'small-parcel-deep' => [
+                static::SMALL_PARCEL_DEEP => [
                     1000 => 349,
                     2000 => 349,
                 ],
-                'small-parcel-bigger' => [
+                static::SMALL_PARCEL_BIGGER => [
                     1000 => 349,
                     2000 => 349,
                 ],
-                'medium-parcel' => [
+                static::MEDIUM_PARCEL => [
                     1000 => 549,
                     2000 => 549,
                     5000 => 699,
@@ -346,37 +369,37 @@ class RoyalMailRates extends StaticRates
         ];
 
         $boxes = [
-            'letter' => [
+            static::LETTER => [
                 'length' => 240,
                 'width' => 165,
                 'height' => 5,
                 'weight' => 100,
             ],
-            'large-letter' => [
+            static::LARGE_LETTER => [
                 'length' => 353,
                 'width' => 250,
                 'height' => 25,
                 'weight' => 750,
             ],
-            'small-parcel-wide' => [
+            static::SMALL_PARCEL_WIDE => [
                 'length' => 450,
                 'width' => 350,
                 'height' => 80,
                 'weight' => 2000,
             ],
-            'small-parcel-deep' => [
+            static::SMALL_PARCEL_DEEP => [
                 'length' => 350,
                 'width' => 250,
                 'height' => 160,
                 'weight' => 2000,
             ],
-            'small-parcel-bigger' => [
+            static::SMALL_PARCEL_BIGGER => [
                 'length' => 450,
                 'width' => 350,
                 'height' => 160,
                 'weight' => 2000,
             ],
-            'medium-parcel' => [
+            static::MEDIUM_PARCEL => [
                 'length' => 610,
                 'width' => 460,
                 'height' => 460,
@@ -397,28 +420,28 @@ class RoyalMailRates extends StaticRates
 
         $bands = [
             '2023' => [
-                'letter' => [
+                static::LETTER => [
                     100 => 75,
                 ],
-                'large-letter' => [
+                static::LARGE_LETTER => [
                     100 => 115,
                     250 => 185,
                     500 => 240,
                     750 => 270,
                 ],
-                'small-parcel-wide' => [
+                static::SMALL_PARCEL_WIDE => [
                     1000 => 349,
                     2000 => 349,
                 ],
-                'small-parcel-deep' => [
+                static::SMALL_PARCEL_DEEP => [
                     1000 => 349,
                     2000 => 349,
                 ],
-                'small-parcel-bigger' => [
+                static::SMALL_PARCEL_BIGGER => [
                     1000 => 349,
                     2000 => 349,
                 ],
-                'medium-parcel' => [
+                static::MEDIUM_PARCEL => [
                     1000 => 549,
                     2000 => 549,
                     5000 => 699,
@@ -429,37 +452,37 @@ class RoyalMailRates extends StaticRates
         ];
 
         $boxes = [
-            'letter' => [
+            static::LETTER => [
                 'length' => 240,
                 'width' => 165,
                 'height' => 5,
                 'weight' => 100,
             ],
-            'large-letter' => [
+            static::LARGE_LETTER => [
                 'length' => 353,
                 'width' => 250,
                 'height' => 25,
                 'weight' => 750,
             ],
-            'small-parcel-wide' => [
+            static::SMALL_PARCEL_WIDE => [
                 'length' => 450,
                 'width' => 350,
                 'height' => 80,
                 'weight' => 2000,
             ],
-            'small-parcel-deep' => [
+            static::SMALL_PARCEL_DEEP => [
                 'length' => 350,
                 'width' => 250,
                 'height' => 160,
                 'weight' => 2000,
             ],
-            'small-parcel-bigger' => [
+            static::SMALL_PARCEL_BIGGER => [
                 'length' => 450,
                 'width' => 350,
                 'height' => 160,
                 'weight' => 2000,
             ],
-            'medium-parcel' => [
+            static::MEDIUM_PARCEL => [
                 'length' => 610,
                 'width' => 460,
                 'height' => 460,
@@ -902,29 +925,29 @@ class RoyalMailRates extends StaticRates
 
         $bands = [
             '2023' => [
-                'large-letter' => [
+                static::LARGE_LETTER => [
                     750 => 330,
                 ],
-                'small-parcel-wide' => [
+                static::SMALL_PARCEL_WIDE => [
                     1000 => 445,
                     2000 => 445,
                 ],
-                'small-parcel-deep' => [
+                static::SMALL_PARCEL_DEEP => [
                     1000 => 445,
                     2000 => 445,
                 ],
-                'small-parcel-bigger' => [
+                static::SMALL_PARCEL_BIGGER => [
                     1000 => 445,
                     2000 => 445,
                 ],
-                'medium-parcel' => [
+                static::MEDIUM_PARCEL => [
                     1000 => 695,
                     2000 => 695,
                     5000 => 795,
                     10000 => 795,
                     20000 => 1295,
                 ],
-                'tube' => [
+                static::TUBE => [
                     1000 => 695,
                     2000 => 695,
                     5000 => 795,
@@ -935,37 +958,37 @@ class RoyalMailRates extends StaticRates
         ];
 
         $boxes = [
-            'large-letter' => [
+            static::LARGE_LETTER => [
                 'length' => 353,
                 'width' => 250,
                 'height' => 25,
                 'weight' => 750,
             ],
-            'small-parcel-wide' => [
+            static::SMALL_PARCEL_WIDE => [
                 'length' => 450,
                 'width' => 350,
                 'height' => 80,
                 'weight' => 2000,
             ],
-            'small-parcel-deep' => [
+            static::SMALL_PARCEL_DEEP => [
                 'length' => 350,
                 'width' => 250,
                 'height' => 160,
                 'weight' => 2000,
             ],
-            'small-parcel-bigger' => [
+            static::SMALL_PARCEL_BIGGER => [
                 'length' => 450,
                 'width' => 350,
                 'height' => 160,
                 'weight' => 2000,
             ],
-            'medium-parcel' => [
+            static::MEDIUM_PARCEL => [
                 'length' => 610,
                 'width' => 460,
                 'height' => 460,
                 'weight' => 20000,
             ],
-            'tube' => [
+            static::TUBE => [
                 'length' => 900,
                 'width' => 70,
                 'height' => 70,
@@ -986,29 +1009,29 @@ class RoyalMailRates extends StaticRates
 
         $bands = [
             '2023' => [
-                'large-letter' => [
+                static::LARGE_LETTER => [
                     750 => 270,
                 ],
-                'small-parcel-wide' => [
+                static::SMALL_PARCEL_WIDE => [
                     1000 => 335,
                     2000 => 335,
                 ],
-                'small-parcel-deep' => [
+                static::SMALL_PARCEL_DEEP => [
                     1000 => 335,
                     2000 => 335,
                 ],
-                'small-parcel-bigger' => [
+                static::SMALL_PARCEL_BIGGER => [
                     1000 => 335,
                     2000 => 335,
                 ],
-                'medium-parcel' => [
+                static::MEDIUM_PARCEL => [
                     1000 => 535,
                     2000 => 535,
                     5000 => 695,
                     10000 => 695,
                     20000 => 1045,
                 ],
-                'tube' => [
+                static::TUBE => [
                     1000 => 535,
                     2000 => 535,
                     5000 => 695,
@@ -1019,37 +1042,37 @@ class RoyalMailRates extends StaticRates
         ];
 
         $boxes = [
-            'large-letter' => [
+            static::LARGE_LETTER => [
                 'length' => 353,
                 'width' => 250,
                 'height' => 25,
                 'weight' => 750,
             ],
-            'small-parcel-wide' => [
+            static::SMALL_PARCEL_WIDE => [
                 'length' => 450,
                 'width' => 350,
                 'height' => 80,
                 'weight' => 2000,
             ],
-            'small-parcel-deep' => [
+            static::SMALL_PARCEL_DEEP => [
                 'length' => 350,
                 'width' => 250,
                 'height' => 160,
                 'weight' => 2000,
             ],
-            'small-parcel-bigger' => [
+            static::SMALL_PARCEL_BIGGER => [
                 'length' => 450,
                 'width' => 350,
                 'height' => 160,
                 'weight' => 2000,
             ],
-            'medium-parcel' => [
+            static::MEDIUM_PARCEL => [
                 'length' => 610,
                 'width' => 460,
                 'height' => 460,
                 'weight' => 20000,
             ],
-            'tube' => [
+            static::TUBE => [
                 'length' => 900,
                 'width' => 70,
                 'height' => 70,
@@ -1071,18 +1094,18 @@ class RoyalMailRates extends StaticRates
 
         $bands = [
             '2023' => [
-                'letter' => [
+                static::LETTER => [
                     10 => [220, 220, 220, 220, 220, 220],
                     20 => [220, 220, 220, 220, 220, 220],
                     100 => [220, 220, 220, 220, 220, 220],
                 ],
-                'large-letter' => [
+                static::LARGE_LETTER => [
                     100 => [325, 325, 325, 420, 420, 420],
                     250 => [495, 495, 495, 740, 750, 655],
                     500 => [595, 595, 595, 870, 1055, 900],
                     750 => [695, 695, 695, 1135, 1425, 1180],
                 ],
-                'packet' => [
+                static::PACKET => [
                     100 => [755, 770, 840, 1000, 1130, 1135],
                     250 => [755, 770, 840, 1135, 1225, 1295],
                     500 => [945, 975, 1035, 1545, 1700, 1860],
@@ -1092,7 +1115,7 @@ class RoyalMailRates extends StaticRates
                     1500 => [1285, 1335, 1545, 2565, 2945, 3120],
                     2000 => [1435, 1485, 1645, 2685, 3115, 3245],
                 ],
-                'printed-papers' => [
+                static::PRINTED_PAPERS => [
                     100 => [755, 770, 840, 1000, 1130, 1135],
                     250 => [755, 770, 840, 1135, 1225, 1295],
                     500 => [945, 975, 1035, 1545, 1700, 1860],
@@ -1136,18 +1159,18 @@ class RoyalMailRates extends StaticRates
 
         $bands = [
             '2023' => [
-                'letter' => [
+                static::LETTER => [
                     10 => [740, 740, 740, 740, 740, 740],
                     20 => [740, 740, 740, 740, 740, 740],
                     100 => [740, 740, 740, 740, 740, 740],
                 ],
-                'large-letter' => [
+                static::LARGE_LETTER => [
                     100 => [875, 875, 875, 970, 980, 975],
                     250 => [990, 990, 990, 1120, 1225, 1135],
                     500 => [1065, 1065, 1065, 1300, 1480, 1330],
                     750 => [1105, 1105, 1105, 1485, 1760, 1530],
                 ],
-                'packet' => [
+                static::PACKET => [
                     100 => [1250, 1265, 1390, 1610, 1725, 1675],
                     250 => [1250, 1265, 1390, 1645, 1760, 1835],
                     500 => [1380, 1420, 1545, 2035, 2210, 2375],
@@ -1157,7 +1180,7 @@ class RoyalMailRates extends StaticRates
                     1500 => [1645, 1665, 1900, 2880, 3300, 3560],
                     2000 => [1660, 1710, 1930, 2925, 3405, 3610],
                 ],
-                'printed-papers' => [
+                static::PRINTED_PAPERS => [
                     100 => [1250, 1265, 1390, 1610, 1725, 1675],
                     250 => [1250, 1265, 1390, 1645, 1760, 1835],
                     500 => [1380, 1420, 1545, 2035, 2210, 2375],
@@ -1201,18 +1224,18 @@ class RoyalMailRates extends StaticRates
 
         $bands = [
             '2023' => [
-                'letter' => [
+                static::LETTER => [
                     10 => [720, 720, 720, 720, 720, 720],
                     20 => [720, 720, 720, 720, 720, 720],
                     100 => [720, 720, 720, 720, 720, 720],
                 ],
-                'large-letter' => [
+                static::LARGE_LETTER => [
                     100 => [865, 865, 865, 960, 965, 965],
                     250 => [955, 955, 955, 1105, 1215, 1125],
                     500 => [1055, 1055, 1055, 1290, 1470, 1320],
                     750 => [1095, 1095, 1095, 1475, 1750, 1520],
                 ],
-                'packet' => [
+                static::PACKET => [
                     100 => [1095, 1125, 1205, 1385, 1520, 1565],
                     250 => [1095, 1125, 1205, 1385, 1520, 1565],
                     500 => [1215, 1245, 1365, 1790, 1980, 1985],
@@ -1222,7 +1245,7 @@ class RoyalMailRates extends StaticRates
                     1500 => [1390, 1445, 1675, 2635, 3085, 2895],
                     2000 => [1390, 1585, 1745, 2745, 3255, 2895],
                 ],
-                'printed-papers' => [
+                static::PRINTED_PAPERS => [
                     100 => [1095, 1125, 1205, 1385, 1520, 1565],
                     250 => [1095, 1125, 1205, 1385, 1520, 1565],
                     500 => [1215, 1245, 1365, 1790, 1980, 1985],
@@ -1266,18 +1289,18 @@ class RoyalMailRates extends StaticRates
 
         $bands = [
             '2023' => [
-                'letter' => [
+                static::LETTER => [
                     10 => [740, 740, 740, 740, 740],
                     20 => [740, 740, 740, 740, 740],
                     100 => [740, 740, 740, 740, 740],
                 ],
-                'large-letter' => [
+                static::LARGE_LETTER => [
                     100 => [875, 875, 875, 970, 980],
                     250 => [990, 990, 990, 1120, 1225],
                     500 => [1065, 1065, 1065, 1300, 1480],
                     750 => [1105, 1105, 1105, 1485, 1760],
                 ],
-                'packet' => [
+                static::PACKET => [
                     100 => [1250, 1265, 1390, 1610, 1725],
                     250 => [1250, 1265, 1390, 1645, 1760],
                     500 => [1380, 1420, 1545, 2035, 2210],
@@ -1287,7 +1310,7 @@ class RoyalMailRates extends StaticRates
                     1500 => [1645, 1665, 1900, 2880, 3300],
                     2000 => [1660, 1710, 1930, 2925, 3405],
                 ],
-                'printed-papers' => [
+                static::PRINTED_PAPERS => [
                     100 => [1250, 1265, 1390, 1610, 1725],
                     250 => [1250, 1265, 1390, 1645, 1760],
                     500 => [1380, 1420, 1545, 2035, 2210],
@@ -1325,18 +1348,18 @@ class RoyalMailRates extends StaticRates
 
         $bands = [
             '2023' => [
-                'letter' => [
+                static::LETTER => [
                     10 => 200,
                     20 => 200,
                     100 => 200,
                 ],
-                'large-letter' => [
+                static::LARGE_LETTER => [
                     100 => 320,
                     250 => 530,
                     500 => 600,
                     750 => 705,
                 ],
-                'packet' => [
+                static::PACKET => [
                     100 => 675,
                     250 => 675,
                     500 => 940,
@@ -1347,7 +1370,7 @@ class RoyalMailRates extends StaticRates
                     1750 => 1430,
                     2000 => 1430,
                 ],
-                'printed-papers' => [
+                static::PRINTED_PAPERS => [
                     100 => 675,
                     250 => 675,
                     500 => 940,
@@ -3446,7 +3469,7 @@ class RoyalMailRates extends StaticRates
 
         // Get pricing for this year and for each box
         foreach ($boxes as $key => $box) {
-            $prices = $pricingBand[$key] ?? $pricingBand['packet'] ?? [];
+            $prices = $pricingBand[$key] ?? $pricingBand[static::PACKET] ?? [];
 
             // For ease-of-use, create multiple boxes for each weight
             foreach ($prices as $weight => $price) {
