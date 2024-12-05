@@ -287,6 +287,58 @@ class RoyalMailRates extends StaticRates
         return $boxPricing;
     }
 
+    protected static function getInternationalTrackedBoxPricing(array $bands, string $countryCode, int $maxCompensation = 0): array
+    {
+        $boxes = self::$internationalDefaultBox;
+
+        $boxPricing = self::getBoxPricing($boxes, $bands, $maxCompensation);
+        $zone = self::getZone($countryCode);
+
+        foreach ($boxPricing as $key => &$box) {
+            if ($zone === 'IE') {
+                $box['price'] = $box['price'][0];
+            } else if ($zone === 'FR') {
+                $box['price'] = $box['price'][1];
+            } else if ($zone === 'DE') {
+                $box['price'] = $box['price'][2];
+            } else if ($zone === 'ES') {
+                $box['price'] = $box['price'][3];
+            } else if ($zone === 'IT') {
+                $box['price'] = $box['price'][4];
+            } else if ($zone === 'CA') {
+                $box['price'] = $box['price'][5];
+            } else if ($zone === 'CN') {
+                $box['price'] = $box['price'][6];
+            } else if ($zone === 'JP') {
+                $box['price'] = $box['price'][7];
+            } else if ($zone === 'AU') {
+                $box['price'] = $box['price'][8];
+            } else if ($zone === 'NZ') {
+                $box['price'] = $box['price'][9];
+            } else if ($zone === 'HK') {
+                $box['price'] = $box['price'][10];
+            } else if ($zone === 'EUR_1') {
+                $box['price'] = $box['price'][11];
+            } else if ($zone === 'EUR_2') {
+                $box['price'] = $box['price'][12];
+            } else if ($zone === 'EUR_3' || $zone === 'EU') {
+                $box['price'] = $box['price'][13];
+            } else if ($zone === '1') {
+                $box['price'] = $box['price'][14];
+            } else if ($zone === '2') {
+                $box['price'] = $box['price'][15];
+            } else if ($zone === '3') {
+                // Fallback to zone 1 for older prices.
+                $box['price'] = $box['price'][16] ?? $box['price'][14];
+            } else {
+                // No price for this country
+                unset($boxPricing[$key]);
+            }
+        }
+
+        return $boxPricing;
+    }
+
     protected static function getParcelforceBoxPricing(array $bands, string $countryCode, array $options = []): array
     {
         $boxesWithPricing = [];

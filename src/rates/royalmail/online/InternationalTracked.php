@@ -56,6 +56,6 @@ class InternationalTracked extends RoyalMailRates
             ],
         ];
 
-        return self::getInternationalBoxPricing($bands, $countryCode);
+        return self::getInternationalTrackedBoxPricing($bands, $countryCode);
     }
 }
