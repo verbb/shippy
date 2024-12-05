@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.0 - 2024-12-06
+
+### Added
+- Add Online and Post Office rates for Royal Mail.
+
+### Changed
+- Extract all static rate providers into separate files.
+- Update Royal Mail International tracked options for some countries.
+- Royal Mail rates now default to Online rates.
+
 ## 1.0.11 - 2024-12-05
 
 ### Added
