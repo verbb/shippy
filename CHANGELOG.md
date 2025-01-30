@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.1 - 2025-01-30
+
+### Changed
+- Update `symfony/event-dispatcher` and `symfony/serializer` packages to support `^5.0`.
+
+### Fixed
+- Add missing FedEx service codes.
+
 ## 1.1.0 - 2024-12-06
 
 ### Added
