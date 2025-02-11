@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.2 - 2025-02-11
+
+### Added
+- Add support for legacy USPS API.
+
 ## 1.1.1 - 2025-01-30
 
 ### Changed
