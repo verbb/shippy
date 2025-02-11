@@ -86,6 +86,7 @@ class USPS extends AbstractCarrier
     protected ?string $accountNumber = null;
     protected ?string $customerRegistrationId = null;
     protected ?string $mailerId = null;
+    protected bool $useLegacyApi = false;
 
 
     // Public Methods
@@ -143,6 +144,17 @@ class USPS extends AbstractCarrier
     public function setMailerId(?string $mailerId): USPS
     {
         $this->mailerId = $mailerId;
+        return $this;
+    }
+
+    public function getUseLegacyApi(): bool
+    {
+        return $this->useLegacyApi;
+    }
+
+    public function setUseLegacyApi(bool $useLegacyApi): USPS
+    {
+        $this->useLegacyApi = $useLegacyApi;
         return $this;
     }
 
@@ -430,9 +442,11 @@ class USPS extends AbstractCarrier
 
     public function getHttpClient(): HttpClient
     {
+        $domain = $this->getUseLegacyApi() ? 'api.usps.com' : 'apis.usps.com';
+
         // Fetch an access token first
         $authResponse = Json::decode((string)(new HttpClient())
-            ->request('POST', 'https://api.usps.com/oauth2/v3/token', [
+            ->request('POST', "https://$domain/oauth2/v3/token", [
                 'json' => [
                     'grant_type' => 'client_credentials',
                     'client_id' => $this->clientId,
@@ -441,7 +455,7 @@ class USPS extends AbstractCarrier
             ])->getBody());
 
         return new HttpClient([
-            'base_uri' => 'https://api.usps.com',
+            'base_uri' => "https://$domain/",
             'headers' => [
                 'Authorization' => 'Bearer ' . $authResponse['access_token'] ?? '',
                 'Content-Type' => 'application/json',
