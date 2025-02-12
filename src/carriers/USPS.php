@@ -254,14 +254,20 @@ class USPS extends AbstractCarrier
         $processedRates = [];
 
         foreach (Arr::get($data, 'rateOptions', []) as $shippingRate) {
-            $serviceCode = Arr::get($shippingRate, 'rates.0.mailClass', '');
             $serviceName = Arr::get($shippingRate, 'rates.0.description', '');
             $rate = Arr::get($shippingRate, 'rates.0.price', 0);
 
-            // We get duplicate rates (the same `price` and `mailClass`) but different description. Skip them.
-            $rateKey = $rate . '_' . $serviceCode;
+            $mailClass = Arr::get($shippingRate, 'rates.0.mailClass', '');
+            $rateIndicator = Arr::get($shippingRate, 'rates.0.rateIndicator', '');
+            $processingCategory = Arr::get($shippingRate, 'rates.0.processingCategory', '');
 
-            $processedRates[$serviceCode][] = new Rate([
+            // Store a few things as the "service code" to give more options for services and handle labels
+            $serviceCode = implode('__', [$mailClass, $rateIndicator]);
+
+            // Different service codes can produce the same price, so no need to duplicate them (machinable vs standard)
+            $rateKey = implode('__', [$mailClass, $rateIndicator, $rate]);
+
+            $processedRates[$rateKey][] = new Rate([
                 'carrier' => $this,
                 'response' => $shippingRate,
                 'serviceName' => $serviceName,
@@ -352,6 +358,12 @@ class USPS extends AbstractCarrier
 
         $shipDate = (new DateTime())->modify('+1 day')->format('Y-m-d');
 
+        // The service code will contain `mailClass`, `rateIndicator` and `processingCategory` but provide fallbacks
+        $serviceCode = explode('__', $rate->getServiceCode());
+        $mailClass = $serviceCode[0] ?? '';
+        $rateIndicator = $serviceCode[1] ?? 'SP';
+        $processingCategory = $serviceCode[2] ?? 'MACHINABLE';
+
         $payload = [
             'imageInfo' => [
                 'imageType' => Arr::get($options, 'labelFormat', 'PDF'),
@@ -381,11 +393,11 @@ class USPS extends AbstractCarrier
                 'ZIPCode' => $shipment->getFrom()->getPostalCode(),
             ],
             'packageDescription' => [
-                'mailClass' => $rate->getServiceCode(),
-                'rateIndicator' => 'SP',
+                'mailClass' => $mailClass,
+                'rateIndicator' => $rateIndicator,
                 'weightUOM' => self::getWeightUnit($shipment),
                 'dimensionsUOM' => self::getDimensionUnit($shipment),
-                'processingCategory' => 'MACHINABLE',
+                'processingCategory' => $processingCategory,
                 'mailingDate' => $shipDate,
                 'destinationEntryFacilityType' => 'NONE',
                 'length' => (float)$shipment->getTotalLength($this, 0),
