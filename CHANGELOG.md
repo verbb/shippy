@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0 - 2025-02-12
+
+### Changed
+- USPS service codes are now provided in the format `{mailClass}__{rateIndicator}__{processingCategory}`.
+- USPS service codes are now expanded to allow more fine-grained control.
+
 ## 1.1.2 - 2025-02-11
 
 ### Added
