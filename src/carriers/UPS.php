@@ -1,7 +1,7 @@
 <?php
 namespace verbb\shippy\carriers;
 
-
+use Composer\InstalledVersions;
 use Illuminate\Support\Arr;
 use verbb\shippy\exceptions\InvalidRequestException;
 use verbb\shippy\helpers\Json;
@@ -422,6 +422,9 @@ class UPS extends AbstractCarrier
             $url = 'https://wwwcie.ups.com/';
         }
 
+        $transId = bin2hex(random_bytes(10));
+        $transactionSrc = 'Shippy ' . InstalledVersions::getPrettyVersion('verbb/shippy');
+
         // Fetch an access token first
         $authResponse = Json::decode((string)(new HttpClient())
             ->request('POST', $url . 'security/v1/oauth/token', [
@@ -440,6 +443,8 @@ class UPS extends AbstractCarrier
             'headers' => [
                 'Authorization' => 'Bearer ' . $authResponse['access_token'] ?? '',
                 'Content-Type' => 'application/json',
+                'transId' => $transId,
+                'transactionSrc' => $transactionSrc,
             ],
         ]);
     }
