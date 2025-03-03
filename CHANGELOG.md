@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.1 - 2025-03-03
+
+### Changed
+- Update UPS to use `transId` and `transactionSrc`.
+
 ## 1.2.0 - 2025-02-12
 
 ### Changed
