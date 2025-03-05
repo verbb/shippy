@@ -148,6 +148,7 @@ abstract class AbstractCarrier extends Model implements CarrierInterface
     public function beforeFetchRates(Request $request): void
     {
         $event = new RateEvent([
+            'carrier' => $this,
             'request' => $request,
         ]);
 
@@ -157,6 +158,7 @@ abstract class AbstractCarrier extends Model implements CarrierInterface
     public function afterFetchRates(array $data): void
     {
         $event = new RateEvent([
+            'carrier' => $this,
             'data' => $data,
         ]);
 
@@ -166,6 +168,7 @@ abstract class AbstractCarrier extends Model implements CarrierInterface
     public function beforeFetchTracking(Request $request): void
     {
         $event = new TrackingEvent([
+            'carrier' => $this,
             'request' => $request,
         ]);
 
@@ -175,6 +178,7 @@ abstract class AbstractCarrier extends Model implements CarrierInterface
     public function afterFetchTracking(array $data): void
     {
         $event = new TrackingEvent([
+            'carrier' => $this,
             'data' => $data,
         ]);
 
@@ -184,6 +188,7 @@ abstract class AbstractCarrier extends Model implements CarrierInterface
     public function beforeFetchLabels(Request $request): void
     {
         $event = new LabelEvent([
+            'carrier' => $this,
             'request' => $request,
         ]);
 
@@ -193,6 +198,7 @@ abstract class AbstractCarrier extends Model implements CarrierInterface
     public function afterFetchLabels(array $data): void
     {
         $event = new LabelEvent([
+            'carrier' => $this,
             'data' => $data,
         ]);
 
