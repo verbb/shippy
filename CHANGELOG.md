@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.2 - 2025-03-05
+
+### Added
+- Add `carrier` to Label, Rate and Tracking events.
+
 ## 1.2.1 - 2025-03-03
 
 ### Changed
