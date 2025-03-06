@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.4 - 2025-03-07
+
+### Added
+- Support Laravel Collections 12. (thanks @tm1000).
+
 ## 1.2.3 - 2025-03-06
 
 ### Changed
