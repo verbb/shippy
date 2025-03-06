@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.3 - 2025-03-06
+
+### Changed
+- Update FedEx tracking URL.
+
 ## 1.2.2 - 2025-03-05
 
 ### Added
