@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.5 - 2025-03-11
+
+### Added
+- Add support for multi-box rates for USPS.
+
 ## 1.2.4 - 2025-03-07
 
 ### Added
