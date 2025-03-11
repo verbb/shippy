@@ -210,15 +210,19 @@ class USPS extends AbstractCarrier
 
         $shipDate = (new DateTime())->modify('+1 day')->format('Y-m-d');
 
+        $box = $shipment->getPackages()[0] ?? null;
+
         $payload = [
             'originZIPCode' => $shipment->getFrom()->getPostalCode(),
             'mailingDate' => $shipDate,
             'accountType' => 'EPS',
             'accountNumber' => $this->accountNumber,
-            'length' => max($shipment->getTotalLength($this, 2), 0.1),
-            'width' => max($shipment->getTotalWidth($this, 2), 0.1),
-            'height' => max($shipment->getTotalHeight($this, 2), 0.1),
-            'weight' => max($shipment->getTotalWeight($this, 2), 0.1),
+
+            // Use values for a single box, then multiple afterwards, due to lack of API support for multi-boxes
+            'length' => max((float)$box?->getLength(2), 0.1),
+            'width' => max((float)$box?->getWidth(2), 0.1),
+            'height' => max((float)$box?->getHeight(2), 0.1),
+            'weight' => max((float)$box?->getWeight(2), 0.1),
         ];
 
         if (self::isDomestic($shipment->getTo()->getCountryCode())) {
@@ -256,6 +260,9 @@ class USPS extends AbstractCarrier
         foreach (Arr::get($data, 'rateOptions', []) as $shippingRate) {
             $serviceName = Arr::get($shippingRate, 'rates.0.description', '');
             $rate = Arr::get($shippingRate, 'rates.0.price', 0);
+
+            // USPS's API doesn't support multi-box rates, so rates are for a single box. We need to multiply to get multi-box rates.
+            $rate = $rate * count($shipment->getPackages());
 
             $mailClass = Arr::get($shippingRate, 'rates.0.mailClass', '');
             $rateIndicator = Arr::get($shippingRate, 'rates.0.rateIndicator', '');
