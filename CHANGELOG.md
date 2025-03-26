@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.6 - 2025-03-27
+
+### Changed
+- Update packages to return a miminum value for weight and dimensions based on the decimal rounding given.
+
 ## 1.2.5 - 2025-03-11
 
 ### Added
