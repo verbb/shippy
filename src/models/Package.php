@@ -35,10 +35,10 @@ class Package extends Model
      */
     public function convertTo(string $weightUnit, string $dimensionUnit): Package
     {
-        $weight = new Mass($this->weight, $this->weightUnit);
-        $width = new Length($this->width, $this->dimensionUnit);
-        $length = new Length($this->length, $this->dimensionUnit);
-        $height = new Length($this->height, $this->dimensionUnit);
+        $weight = new Mass($this->getWeight(), $this->weightUnit);
+        $width = new Length($this->getWidth(), $this->dimensionUnit);
+        $length = new Length($this->getLength(), $this->dimensionUnit);
+        $height = new Length($this->getHeight(), $this->dimensionUnit);
 
         return new Package([
             'weight' => $weight->toUnit($weightUnit),
@@ -53,7 +53,7 @@ class Package extends Model
 
     public function getWeight(int $decimals = 2): string
     {
-        return (string)round($this->weight, $decimals);
+        return $this->_getRoundedValue($this->weight, $decimals);
     }
 
     public function setWeight(string $weight): Package
@@ -64,7 +64,7 @@ class Package extends Model
 
     public function getWidth(int $decimals = 2): string
     {
-        return (string)round($this->width, $decimals);
+        return $this->_getRoundedValue($this->width, $decimals);
     }
 
     public function setWidth(string $width): Package
@@ -75,7 +75,7 @@ class Package extends Model
 
     public function getLength(int $decimals = 2): string
     {
-        return (string)round($this->length, $decimals);
+        return $this->_getRoundedValue($this->length, $decimals);
     }
 
     public function setLength(string $length): Package
@@ -86,7 +86,7 @@ class Package extends Model
 
     public function getHeight(int $decimals = 2): string
     {
-        return (string)round($this->height, $decimals);
+        return $this->_getRoundedValue($this->height, $decimals);
     }
 
     public function setHeight(string $height): Package
@@ -192,6 +192,24 @@ class Package extends Model
     {
         $this->isDocument = $isDocument;
         return $this;
+    }
+
+
+    // Private Methods
+    // =========================================================================
+
+    private function _getRoundedValue(?string $value, int $decimals = 2): string
+    {
+        $rounded = round($value, $decimals);
+
+        // Calculate the minimum allowed value based on the number of decimals
+        $minValue = 1 / (10 ** $decimals);
+
+        // If the rounded value is zero, return the minimum value
+        $value = $rounded > 0 ? $rounded : $minValue;
+
+        // Format it as a string with the given number of decimals
+        return number_format($value, $decimals, '.', '');
     }
 
 }
