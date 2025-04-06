@@ -390,6 +390,7 @@ class FedEx extends AbstractCarrier
                 'preferredCurrency' => $shipment->getCurrency(),
                 'rateRequestType' => [
                     'LIST',
+                    'ACCOUNT',
                 ],
                 'pickupType' => $this->pickupType,
                 'packagingType' => $this->packagingType,
