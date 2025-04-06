@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.7 - 2025-05-06
+
+### Fixed
+- Fix FedEx carrier not showing correct rates for negotiated rates.
+
 ## 1.2.6 - 2025-03-27
 
 ### Changed
