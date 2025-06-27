@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.8 - 2025-06-27
+
+### Added
+- Add correct currency to Royal Mail rates.
+- Add support for boxes and rates to store currency.
+- Add April 2025 pricing for Royal Mail.
+
 ## 1.2.7 - 2025-04-06
 
 ### Fixed
