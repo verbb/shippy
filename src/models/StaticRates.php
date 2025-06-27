@@ -14,6 +14,7 @@ class StaticRates
     public static function getRateFromBoxRates(Shipment $shipment, CarrierInterface $carrier, array $boxRates, string $serviceCode): ?Rate
     {
         $rate = 0;
+        $currency = null;
 
         // Ensure we sort boxes now by price, so we can stop at the first (cheapest) one.
         uasort($boxRates, function($a, $b) {
@@ -34,8 +35,12 @@ class StaticRates
                     'innerDepth' => $boxRate['height'],
                     'maxWeight' => $boxRate['weight'],
                     'price' => $boxRate['price'],
+                    'currency' => $boxRate['currency'] ?? null,
                     'maxItemValue' => $boxRate['itemValue'] ?? null,
                 ]);
+
+                // Allow the boxes currency to set the overall rate currency
+                $currency = $boxRate['currency'] ?? null;
 
                 $items = new ItemList();
 
@@ -70,6 +75,7 @@ class StaticRates
             'serviceName' => Arr::get($carrier::getServiceCodes(), $serviceCode, ''),
             'serviceCode' => $serviceCode,
             'rate' => $rate,
+            'currency' => $currency,
         ]);
     }
 

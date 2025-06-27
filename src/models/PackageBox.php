@@ -19,6 +19,7 @@ class PackageBox extends Model implements Box
     protected ?int $maxWeight = null;
     protected ?string $type = null;
     protected ?float $price = null;
+    protected ?string $currency = null;
 
 
     // Public Methods
@@ -145,5 +146,15 @@ class PackageBox extends Model implements Box
     public function setPrice($value): void
     {
         $this->price = $value;
+    }
+
+    public function getCurrency(): string
+    {
+        return (string)$this->currency;
+    }
+
+    public function setCurrency($value): void
+    {
+        $this->currency = $value;
     }
 }
