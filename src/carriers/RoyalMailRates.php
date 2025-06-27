@@ -124,6 +124,8 @@ class RoyalMailRates extends StaticRates
             // Call the generic `getRates` method on the resolved class
             if ($rateBoxes = $rateClass::getRates($shipment->getTo()->getCountryCode())) {
                 foreach ($rateBoxes as $key => &$rateBox) {
+                    $rateBox['currency'] = 'GBP';
+
                     $price = $rateBox['price'] ?? null;
 
                     if ($price) {
