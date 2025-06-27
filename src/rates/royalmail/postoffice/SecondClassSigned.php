@@ -28,47 +28,43 @@ class SecondClassSigned extends RoyalMailRates
                     750 => 270,
                 ],
                 self::SMALL_PARCEL_WIDE => [
-                    2000 => 369,
+                    2000 => 375,
                 ],
                 self::SMALL_PARCEL_DEEP => [
-                    2000 => 369,
+                    2000 => 375,
                 ],
                 self::SMALL_PARCEL_BIGGER => [
-                    2000 => 369,
+                    2000 => 375,
                 ],
                 self::MEDIUM_PARCEL => [
-                    1000 => 589,
-                    2000 => 589,
-                    5000 => 739,
-                    10000 => 739,
-                    20000 => 1099,
+                    2000 => 615,
+                    10000 => 765,
+                    20000 => 1155,
                 ],
             ],
-            '2024-10' => [
+            '2025' => [
                 self::LETTER => [
-                    100 => 85,
+                    100 => 87,
                 ],
                 self::LARGE_LETTER => [
                     100 => 155,
-                    250 => 210,
-                    500 => 250,
+                    250 => 200,
+                    500 => 240,
                     750 => 270,
                 ],
                 self::SMALL_PARCEL_WIDE => [
-                    2000 => 375,
+                    2000 => 390,
                 ],
                 self::SMALL_PARCEL_DEEP => [
-                    2000 => 375,
+                    2000 => 390,
                 ],
                 self::SMALL_PARCEL_BIGGER => [
-                    2000 => 375,
+                    2000 => 390,
                 ],
                 self::MEDIUM_PARCEL => [
-                    1000 => 615,
-                    2000 => 615,
-                    5000 => 765,
-                    10000 => 765,
-                    20000 => 1155,
+                    2000 => 629,
+                    10000 => 789,
+                    20000 => 1189,
                 ],
             ],
         ];
@@ -89,7 +85,7 @@ class SecondClassSigned extends RoyalMailRates
             self::SMALL_PARCEL_WIDE => [
                 'length' => 450,
                 'width' => 350,
-                'height' => 80,
+                'height' => 160,
                 'weight' => 2000,
             ],
             self::SMALL_PARCEL_DEEP => [
@@ -109,6 +105,12 @@ class SecondClassSigned extends RoyalMailRates
                 'width' => 460,
                 'height' => 460,
                 'weight' => 20000,
+            ],
+            self::TUBE => [
+                'length' => 900,
+                'width' => 70,
+                'height' => 70,
+                'weight' => 2000,
             ],
         ];
 

@@ -19,62 +19,48 @@ class FirstClass extends RoyalMailRates
         $bands = [
             '2024' => [
                 self::LETTER => [
-                    100 => 135,
-                ],
-                self::LARGE_LETTER => [
-                    100 => 210,
-                    250 => 270,
-                    500 => 330,
-                    750 => 330,
-                ],
-                self::SMALL_PARCEL_WIDE => [
-                    1000 => 399,
-                    2000 => 399,
-                ],
-                self::SMALL_PARCEL_DEEP => [
-                    1000 => 399,
-                    2000 => 399,
-                ],
-                self::SMALL_PARCEL_BIGGER => [
-                    1000 => 399,
-                    2000 => 399,
-                ],
-                self::MEDIUM_PARCEL => [
-                    1000 => 549,
-                    2000 => 549,
-                    5000 => 719,
-                    10000 => 719,
-                    20000 => 1129,
-                ],
-            ],
-            '2024-10' => [
-                self::LETTER => [
                     100 => 165,
                 ],
                 self::LARGE_LETTER => [
                     100 => 250,
-                    250 => 330,
-                    500 => 330,
                     750 => 330,
                 ],
                 self::SMALL_PARCEL_WIDE => [
-                    1000 => 409,
                     2000 => 409,
                 ],
                 self::SMALL_PARCEL_DEEP => [
-                    1000 => 409,
                     2000 => 409,
                 ],
                 self::SMALL_PARCEL_BIGGER => [
-                    1000 => 409,
                     2000 => 409,
                 ],
                 self::MEDIUM_PARCEL => [
-                    1000 => 569,
                     2000 => 569,
-                    5000 => 739,
                     10000 => 739,
                     20000 => 1189,
+                ],
+            ],
+            '2025' => [
+                self::LETTER => [
+                    100 => 170,
+                ],
+                self::LARGE_LETTER => [
+                    100 => 305,
+                    750 => 330,
+                ],
+                self::SMALL_PARCEL_WIDE => [
+                    2000 => 419,
+                ],
+                self::SMALL_PARCEL_DEEP => [
+                    2000 => 419,
+                ],
+                self::SMALL_PARCEL_BIGGER => [
+                    2000 => 419,
+                ],
+                self::MEDIUM_PARCEL => [
+                    2000 => 585,
+                    10000 => 765,
+                    20000 => 1235,
                 ],
             ],
         ];
@@ -95,7 +81,7 @@ class FirstClass extends RoyalMailRates
             self::SMALL_PARCEL_WIDE => [
                 'length' => 450,
                 'width' => 350,
-                'height' => 80,
+                'height' => 160,
                 'weight' => 2000,
             ],
             self::SMALL_PARCEL_DEEP => [
@@ -115,6 +101,12 @@ class FirstClass extends RoyalMailRates
                 'width' => 460,
                 'height' => 460,
                 'weight' => 20000,
+            ],
+            self::TUBE => [
+                'length' => 900,
+                'width' => 70,
+                'height' => 70,
+                'weight' => 2000,
             ],
         ];
 

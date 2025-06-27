@@ -22,47 +22,47 @@ class Tracked24 extends RoyalMailRates
                     750 => 350,
                 ],
                 self::SMALL_PARCEL_WIDE => [
-                    2000 => 419,
+                    2000 => 425,
                 ],
                 self::SMALL_PARCEL_DEEP => [
-                    2000 => 419,
+                    2000 => 425,
                 ],
                 self::SMALL_PARCEL_BIGGER => [
-                    2000 => 419,
+                    2000 => 425,
                 ],
                 self::MEDIUM_PARCEL => [
-                    2000 => 589,
-                    10000 => 759,
-                    20000 => 1169,
+                    2000 => 599,
+                    10000 => 769,
+                    20000 => 1219,
                 ],
                 self::TUBE => [
-                    2000 => 589,
-                    10000 => 759,
-                    20000 => 1169,
+                    2000 => 599,
+                    10000 => 769,
+                    20000 => 1219,
                 ],
             ],
-            '2024-10' => [
+            '2025' => [
                 self::LARGE_LETTER => [
-                    750 => 350,
+                    750 => 360,
                 ],
                 self::SMALL_PARCEL_WIDE => [
-                    2000 => 425,
+                    2000 => 429,
                 ],
                 self::SMALL_PARCEL_DEEP => [
-                    2000 => 425,
+                    2000 => 429,
                 ],
                 self::SMALL_PARCEL_BIGGER => [
-                    2000 => 425,
+                    2000 => 429,
                 ],
                 self::MEDIUM_PARCEL => [
-                    2000 => 599,
-                    10000 => 769,
-                    20000 => 1219,
+                    2000 => 605,
+                    10000 => 790,
+                    20000 => 1260,
                 ],
                 self::TUBE => [
-                    2000 => 599,
-                    10000 => 769,
-                    20000 => 1219,
+                    2000 => 605,
+                    10000 => 790,
+                    20000 => 1260,
                 ],
             ],
         ];
@@ -77,7 +77,7 @@ class Tracked24 extends RoyalMailRates
             self::SMALL_PARCEL_WIDE => [
                 'length' => 450,
                 'width' => 350,
-                'height' => 80,
+                'height' => 160,
                 'weight' => 2000,
             ],
             self::SMALL_PARCEL_DEEP => [

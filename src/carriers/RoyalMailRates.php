@@ -57,7 +57,8 @@ class RoyalMailRates extends StaticRates
         '2022' => '2022-04-04',
         '2023' => '2023-04-03',
         '2024' => '2024-07-01',
-        '2024-10' => '2024-10-07',
+        '2024' => '2024-10-07',
+        '2025' => '2025-04-07',
     ];
 
     protected static array $internationalDefaultBox = [

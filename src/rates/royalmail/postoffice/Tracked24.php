@@ -19,30 +19,6 @@ class Tracked24 extends RoyalMailRates
         $bands = [
             '2024' => [
                 self::LARGE_LETTER => [
-                    750 => 350,
-                ],
-                self::SMALL_PARCEL_WIDE => [
-                    2000 => 479,
-                ],
-                self::SMALL_PARCEL_DEEP => [
-                    2000 => 479,
-                ],
-                self::SMALL_PARCEL_BIGGER => [
-                    2000 => 479,
-                ],
-                self::MEDIUM_PARCEL => [
-                    2000 => 709,
-                    10000 => 879,
-                    20000 => 1289,
-                ],
-                self::TUBE => [
-                    2000 => 709,
-                    10000 => 879,
-                    20000 => 1289,
-                ],
-            ],
-            '2024-10' => [
-                self::LARGE_LETTER => [
                     750 => 360,
                 ],
                 self::SMALL_PARCEL_WIDE => [
@@ -65,6 +41,30 @@ class Tracked24 extends RoyalMailRates
                     20000 => 1349,
                 ],
             ],
+            '2025' => [
+                self::LARGE_LETTER => [
+                    750 => 370,
+                ],
+                self::SMALL_PARCEL_WIDE => [
+                    2000 => 515,
+                ],
+                self::SMALL_PARCEL_DEEP => [
+                    2000 => 515,
+                ],
+                self::SMALL_PARCEL_BIGGER => [
+                    2000 => 515,
+                ],
+                self::MEDIUM_PARCEL => [
+                    2000 => 745,
+                    10000 => 929,
+                    20000 => 1399,
+                ],
+                self::TUBE => [
+                    2000 => 745,
+                    10000 => 929,
+                    20000 => 1399,
+                ],
+            ],
         ];
 
         $boxes = [
@@ -77,7 +77,7 @@ class Tracked24 extends RoyalMailRates
             self::SMALL_PARCEL_WIDE => [
                 'length' => 450,
                 'width' => 350,
-                'height' => 80,
+                'height' => 160,
                 'weight' => 2000,
             ],
             self::SMALL_PARCEL_DEEP => [

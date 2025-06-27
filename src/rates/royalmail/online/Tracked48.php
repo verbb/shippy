@@ -31,38 +31,38 @@ class Tracked48 extends RoyalMailRates
                     2000 => 339,
                 ],
                 self::MEDIUM_PARCEL => [
-                    2000 => 509,
-                    10000 => 659,
-                    20000 => 1019,
+                    2000 => 515,
+                    10000 => 665,
+                    20000 => 1055,
                 ],
                 self::TUBE => [
-                    2000 => 509,
-                    10000 => 659,
-                    20000 => 1019,
+                    2000 => 515,
+                    10000 => 665,
+                    20000 => 1055,
                 ],
             ],
-            '2024-10' => [
+            '2025' => [
                 self::LARGE_LETTER => [
                     750 => 270,
                 ],
                 self::SMALL_PARCEL_WIDE => [
-                    2000 => 339,
+                    2000 => 345,
                 ],
                 self::SMALL_PARCEL_DEEP => [
-                    2000 => 339,
+                    2000 => 345,
                 ],
                 self::SMALL_PARCEL_BIGGER => [
-                    2000 => 339,
+                    2000 => 345,
                 ],
                 self::MEDIUM_PARCEL => [
                     2000 => 515,
-                    10000 => 665,
-                    20000 => 1055,
+                    10000 => 680,
+                    20000 => 1080,
                 ],
                 self::TUBE => [
                     2000 => 515,
-                    10000 => 665,
-                    20000 => 1055,
+                    10000 => 680,
+                    20000 => 1080,
                 ],
             ],
         ];
@@ -77,7 +77,7 @@ class Tracked48 extends RoyalMailRates
             self::SMALL_PARCEL_WIDE => [
                 'length' => 450,
                 'width' => 350,
-                'height' => 80,
+                'height' => 160,
                 'weight' => 2000,
             ],
             self::SMALL_PARCEL_DEEP => [
