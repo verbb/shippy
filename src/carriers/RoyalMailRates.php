@@ -116,7 +116,7 @@ class RoyalMailRates extends StaticRates
         self::$ratesType = $carrier->getRatesType();
 
         // Resolve the class dynamically
-        $className = 'verbb\\shippy\\rates\\royalmail\\' . self::$ratesType . '\\' . StringHelper::toPascalCase($serviceCode);
+        $className = 'verbb\\shippy\\rates\\royalmail\\' . strtolower(self::$ratesType) . '\\' . StringHelper::toPascalCase($serviceCode);
 
         if (class_exists($className)) {
             $rateClass = new $className();
