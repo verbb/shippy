@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.9 - 2025-07-01
+
+### Fixed
+- Fix autoloading issue with Royal Mail post office rates.
+
 ## 1.2.8 - 2025-06-27
 
 ### Added
