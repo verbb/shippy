@@ -27,7 +27,7 @@
         "php": "^8.0",
         "ext-json": "*",
         "commerceguys/addressing": "^1.0 || ^2.0",
-        "dvdoug/boxpacker": "^3.0",
+        "dvdoug/boxpacker": "^3.0 || ^4.0",
         "guzzlehttp/guzzle": "^7.0",
         "illuminate/collections": "^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0",
         "php-units-of-measure/php-units-of-measure": "^2.0",
