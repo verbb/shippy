@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.10 - 2025-07-11
+
+### Added
+- Add support for `dvdoug/boxpacker:^4.0`.
+
+### Fixed
+- Fix a rounding error for Australia Post (Shipping & Tracking API).
+
 ## 1.2.9 - 2025-07-01
 
 ### Fixed
