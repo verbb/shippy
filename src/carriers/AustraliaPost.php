@@ -205,10 +205,10 @@ class AustraliaPost extends AbstractCarrier
                 ],
                 'items' => array_map(function($package) {
                     return [
-                        'length' => $package->getLength(),
-                        'width' => $package->getWidth(),
-                        'height' => $package->getHeight(),
-                        'weight' => $package->getWeight(),
+                        'length' => $package->getLength(1),
+                        'width' => $package->getWidth(1),
+                        'height' => $package->getHeight(1),
+                        'weight' => $package->getWeight(1),
                     ];
                 }, $shipment->getPackages()),
             ];
