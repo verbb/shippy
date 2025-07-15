@@ -99,4 +99,12 @@ class PackageItem extends Model implements Item
     {
         $this->itemValue = $value;
     }
+
+    public function getAllowedRotation(): \DVDoug\BoxPacker\Rotation
+    {
+        if ($this->keepFlat) {
+            return \DVDoug\BoxPacker\Rotation::KeepFlat;
+        }
+        return \DVDoug\BoxPacker\Rotation::BestFit;
+    }
 }
