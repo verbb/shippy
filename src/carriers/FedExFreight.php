@@ -95,7 +95,7 @@ class FedExFreight extends FedEx
             ],
             'freightRequestedShipment' => [
                 'shipper' => [
-                    'address' => $this->getAddress($shipment->getFrom()),
+                    'address' => $this->getAddress($this->shipper),
                 ],
                 'recipient' => [
                     'address' => $this->getAddress($shipment->getTo()),
