@@ -144,16 +144,6 @@ class AustraliaPost extends AbstractCarrier
     // Public Methods
     // =========================================================================
 
-    public function __construct(array $config = [])
-    {
-        // Ensure the account number is zero padded 10 digits
-        if (array_key_exists('accountNumber', $config) && $config['accountNumber']) {
-            $config['accountNumber'] = str_pad($config['accountNumber'], 10, '0', STR_PAD_LEFT);
-        }
-
-        parent::__construct($config);
-    }
-
     public function getApiKey(): ?string
     {
         return $this->apiKey;
