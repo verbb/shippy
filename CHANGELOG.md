@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.11 - 2025-08-12
+
+### Changed
+- Use shipper address in request for FedEx Freight.
+
+### Fixed
+- Fix support for `dvdoug/boxpacker:^4.0`.
+- Fix handling for StarTrack account numbers for the Australia Post carrier, by removing zero-padding to account numbers.
+
 ## 1.2.10 - 2025-07-11
 
 ### Added
