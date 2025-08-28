@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.12 - 2025-08-29
+
+### Fixed
+- Fix UPS rate handling when no service code can be found.
+
 ## 1.2.11 - 2025-08-12
 
 ### Changed
