@@ -3,6 +3,7 @@ namespace verbb\shippy\carriers;
 
 use Composer\InstalledVersions;
 use Illuminate\Support\Arr;
+use verbb\shippy\Shippy;
 use verbb\shippy\exceptions\InvalidRequestException;
 use verbb\shippy\helpers\Json;
 use verbb\shippy\models\Address;
@@ -271,6 +272,16 @@ class UPS extends AbstractCarrier
             $serviceRegion = Arr::get(self::getServiceCodes(), $shipment->getFrom()->getCountryCode(), Arr::get(self::getServiceCodes(), 'international'));
             $serviceCode = Arr::get($shippingRate, 'Service.Code');
             $serviceName = Arr::get($serviceRegion, $serviceCode, '');
+
+            // Sanity check in case a code can't be found
+            if (!$serviceCode) {
+                Shippy::debug('{name} Rate Request: Unable to find "Service.Code" for rate: {payload}', [
+                    'name' => static::getName(),
+                    'payload' => Json::encode($shippingRate),
+                ]);
+
+                continue;
+            }
 
             $rates[] = new Rate([
                 'carrier' => $this,
