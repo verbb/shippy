@@ -323,23 +323,68 @@ class UPS extends AbstractCarrier
                 return $response->json();
             });
 
-            $statusCode = Arr::get($data, 'currentStatus', '');
-            $status = $this->_mapTrackingStatus($statusCode);
+            // Handle the new response structure
+            $shipments = Arr::get($data, 'trackResponse.shipment', []);
 
-            $tracking[] = new Tracking([
-                'carrier' => $this,
-                'response' => $data,
-                'trackingNumber' => $trackingNumber,
-                'status' => $status,
-                'estimatedDelivery' => null,
-                'details' => array_map(function($detail) {
-                    return new TrackingDetail([
-                        'location' => Arr::get($detail, 'location', ''),
-                        'description' => Arr::get($detail, 'event', ''),
-                        'date' => Arr::get($detail, 'date', '') . ' ' . Arr::get($detail, 'time', ''),
+            foreach ($shipments as $shipment) {
+                $packages = Arr::get($shipment, 'package', []);
+
+                foreach ($packages as $package) {
+                    $currentStatus = Arr::get($package, 'currentStatus');
+                    $statusCode = Arr::get($currentStatus, 'code', '');
+                    $status = $this->_mapTrackingStatusCode($statusCode);
+
+                    // Extract delivery date if available
+                    $deliveryDates = Arr::get($package, 'deliveryDate', []);
+                    $estimatedDelivery = null;
+                    if (!empty($deliveryDates) && isset($deliveryDates[0]['date'])) {
+                        $estimatedDelivery = $deliveryDates[0]['date'];
+                    }
+
+                    // Parse activity/tracking details
+                    $activities = Arr::get($package, 'activity', []);
+                    $details = array_map(function($activity) {
+                        $location = '';
+                        $address = Arr::get($activity, 'location.address');
+                        if ($address) {
+                            $locationParts = array_filter([
+                                Arr::get($address, 'city'),
+                                Arr::get($address, 'stateProvince'),
+                                Arr::get($address, 'countryCode'),
+                            ]);
+                            $location = implode(', ', $locationParts);
+                        }
+
+                        $description = Arr::get($activity, 'status.description', '');
+
+                        // Format date and time
+                        $date = Arr::get($activity, 'date', '');
+                        $time = Arr::get($activity, 'time', '');
+                        $dateTime = '';
+                        if ($date && $time) {
+                            // Convert YYYYMMDD and HHMMSS to readable format
+                            $formattedDate = date('Y-m-d', strtotime($date));
+                            $formattedTime = date('H:i:s', strtotime($time));
+                            $dateTime = $formattedDate . ' ' . $formattedTime;
+                        }
+
+                        return new TrackingDetail([
+                            'location' => $location,
+                            'description' => $description,
+                            'date' => $dateTime,
+                        ]);
+                    }, $activities);
+
+                    $tracking[] = new Tracking([
+                        'carrier' => $this,
+                        'response' => $data,
+                        'trackingNumber' => Arr::get($package, 'trackingNumber', $trackingNumber),
+                        'status' => $status,
+                        'estimatedDelivery' => $estimatedDelivery,
+                        'details' => $details,
                     ]);
-                }, Arr::get($data, 'events', [])),
-            ]);
+                }
+            }
         }
 
         return new TrackingResponse([
