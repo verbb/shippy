@@ -38,7 +38,7 @@ class UPS extends AbstractCarrier
     {
         return ($shipment->getFrom()->getCountryCode() === 'US') ? 'in' : 'cm';
     }
-    
+
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
         return "https://wwwapps.ups.com/WebTracking/track?track=yes&trackNums={$trackingNumber}";
@@ -330,19 +330,26 @@ class UPS extends AbstractCarrier
                 $packages = Arr::get($shipment, 'package', []);
 
                 foreach ($packages as $package) {
-                    $currentStatus = Arr::get($package, 'currentStatus');
-                    $statusCode = Arr::get($currentStatus, 'code', '');
-                    $status = $this->_mapTrackingStatusCode($statusCode);
-
                     // Extract delivery date if available
                     $deliveryDates = Arr::get($package, 'deliveryDate', []);
                     $estimatedDelivery = null;
-                    if (!empty($deliveryDates) && isset($deliveryDates[0]['date'])) {
-                        $estimatedDelivery = $deliveryDates[0]['date'];
+                    if (!empty($deliveryDates)) {
+                        // UPS delivery date array contains scheduling history:
+                        // - SDD (Scheduled Delivery Date): Initial scheduled date
+                        // - RDD (Rescheduled Delivery Date): Updated/rescheduled date
+                        // - DEL (Delivered): Actual delivery date
+                        // Take the last entry as it represents the most current/accurate date
+                        $latestDeliveryDate = end($deliveryDates);
+                        $estimatedDelivery = Arr::get($latestDeliveryDate, 'date');
                     }
 
                     // Parse activity/tracking details
                     $activities = Arr::get($package, 'activity', []);
+
+                    // get current status from the latest (first) activity
+                    $status = $this->_mapTrackingStatus(Arr::get($activities[0], 'status.type', ''));
+                    $statusDetail = Arr::get($activities[0], 'status.description', '');
+
                     $details = array_map(function($activity) {
                         $location = '';
                         $address = Arr::get($activity, 'location.address');
@@ -372,6 +379,8 @@ class UPS extends AbstractCarrier
                             'location' => $location,
                             'description' => $description,
                             'date' => $dateTime,
+                            'status' => $this->_mapTrackingStatus(Arr::get($activity, 'status.type', '')),
+                            'statusDetail' => Arr::get($activity, 'status.description', '')
                         ]);
                     }, $activities);
 
@@ -380,8 +389,12 @@ class UPS extends AbstractCarrier
                         'response' => $data,
                         'trackingNumber' => Arr::get($package, 'trackingNumber', $trackingNumber),
                         'status' => $status,
+                        'statusDetail' => $statusDetail,
                         'estimatedDelivery' => $estimatedDelivery,
                         'details' => $details,
+                        'signedBy' => Arr::get($package, 'deliveryInformation.receivedBy', null),
+                        'weight' => Arr::get($package, 'weight.weight', null),
+                        'weightUnit' => Arr::get($package, 'weight.unitOfMeasurement', null),
                     ]);
                 }
             }
