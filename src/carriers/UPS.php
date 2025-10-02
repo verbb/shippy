@@ -38,7 +38,7 @@ class UPS extends AbstractCarrier
     {
         return ($shipment->getFrom()->getCountryCode() === 'US') ? 'in' : 'cm';
     }
-    
+
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
         return "https://wwwapps.ups.com/WebTracking/track?track=yes&trackNums={$trackingNumber}";
@@ -323,23 +323,102 @@ class UPS extends AbstractCarrier
                 return $response->json();
             });
 
-            $statusCode = Arr::get($data, 'currentStatus', '');
-            $status = $this->_mapTrackingStatus($statusCode);
+            // Handle the new response structure
+            $shipments = Arr::get($data, 'trackResponse.shipment', []);
 
-            $tracking[] = new Tracking([
-                'carrier' => $this,
-                'response' => $data,
-                'trackingNumber' => $trackingNumber,
-                'status' => $status,
-                'estimatedDelivery' => null,
-                'details' => array_map(function($detail) {
-                    return new TrackingDetail([
-                        'location' => Arr::get($detail, 'location', ''),
-                        'description' => Arr::get($detail, 'event', ''),
-                        'date' => Arr::get($detail, 'date', '') . ' ' . Arr::get($detail, 'time', ''),
+            foreach ($shipments as $shipment) {
+                $packages = Arr::get($shipment, 'package', []);
+                $warnings = Arr::get($shipment, 'warnings', []);
+
+                foreach ($packages as $package) {
+                    // Extract delivery date if available
+                    $deliveryDates = Arr::get($package, 'deliveryDate', []);
+                    $estimatedDelivery = null;
+                    if (!empty($deliveryDates)) {
+                        // UPS delivery date array contains scheduling history:
+                        // - SDD (Scheduled Delivery Date): Initial scheduled date
+                        // - RDD (Rescheduled Delivery Date): Updated/rescheduled date
+                        // - DEL (Delivered): Actual delivery date
+                        // Take the last entry as it represents the most current/accurate date
+                        $latestDeliveryDate = end($deliveryDates);
+                        $estimatedDelivery = Arr::get($latestDeliveryDate, 'date');
+                    }
+
+                    // Parse activity/tracking details
+                    $activities = Arr::get($package, 'activity', []);
+
+                    // get current status from the latest (first) activity
+                    $status = $this->_mapTrackingStatus(Arr::get($activities[0], 'status.type', ''));
+                    $statusDetail = Arr::get($activities[0], 'status.description', '');
+
+                    $details = array_map(function($activity) {
+                        $location = '';
+                        $address = Arr::get($activity, 'location.address');
+                        if ($address) {
+                            $locationParts = array_filter([
+                                Arr::get($address, 'city'),
+                                Arr::get($address, 'stateProvince'),
+                                Arr::get($address, 'countryCode'),
+                            ]);
+                            $location = implode(', ', $locationParts);
+                        }
+
+                        $description = Arr::get($activity, 'status.description', '');
+
+                        // Format date and time
+                        $date = Arr::get($activity, 'date', '');
+                        $time = Arr::get($activity, 'time', '');
+                        $dateTime = '';
+                        if ($date && $time) {
+                            // Convert YYYYMMDD and HHMMSS to readable format
+                            $formattedDate = date('Y-m-d', strtotime($date));
+                            $formattedTime = date('H:i:s', strtotime($time));
+                            $dateTime = $formattedDate . ' ' . $formattedTime;
+                        }
+
+                        return new TrackingDetail([
+                            'location' => $location,
+                            'description' => $description,
+                            'date' => $dateTime,
+                            'status' => $this->_mapTrackingStatus(Arr::get($activity, 'status.type', '')),
+                            'statusDetail' => Arr::get($activity, 'status.description', '')
+                        ]);
+                    }, $activities);
+
+                    $tracking[] = new Tracking([
+                        'carrier' => $this,
+                        'response' => $data,
+                        'trackingNumber' => Arr::get($package, 'trackingNumber', $trackingNumber),
+                        'status' => $status,
+                        'statusDetail' => $statusDetail,
+                        'estimatedDelivery' => $estimatedDelivery,
+                        'details' => $details,
+                        'signedBy' => Arr::get($package, 'deliveryInformation.receivedBy', null),
+                        'weight' => Arr::get($package, 'weight.weight', null),
+                        'weightUnit' => Arr::get($package, 'weight.unitOfMeasurement', null),
                     ]);
-                }, Arr::get($data, 'events', [])),
-            ]);
+                }
+
+                if (empty($packages) && !empty($warnings)) {
+                    $code = Arr::get($warnings[0], 'code', '');
+                    $message = Arr::get($warnings[0], 'message', 'Unknown error');
+                    $status = Tracking::STATUS_UNKNOWN;
+                    
+                    // If the message contains Not Found, set status as not found
+                    if (str_contains(strtolower($message), 'not found')) {
+                        $status = Tracking::STATUS_NOT_FOUND;
+                    }
+
+                    $tracking[] = new Tracking([
+                        'carrier' => $this,
+                        'response' => $data,
+                        'trackingNumber' => $trackingNumber,
+                        'status' => $status,
+                        'statusDetail' => $code . ': ' . $message,
+                        'details' => [],
+                    ]);
+                }
+            }
         }
 
         return new TrackingResponse([
