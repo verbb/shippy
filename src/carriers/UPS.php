@@ -328,6 +328,7 @@ class UPS extends AbstractCarrier
 
             foreach ($shipments as $shipment) {
                 $packages = Arr::get($shipment, 'package', []);
+                $warnings = Arr::get($shipment, 'warnings', []);
 
                 foreach ($packages as $package) {
                     // Extract delivery date if available
@@ -395,6 +396,26 @@ class UPS extends AbstractCarrier
                         'signedBy' => Arr::get($package, 'deliveryInformation.receivedBy', null),
                         'weight' => Arr::get($package, 'weight.weight', null),
                         'weightUnit' => Arr::get($package, 'weight.unitOfMeasurement', null),
+                    ]);
+                }
+
+                if (empty($packages) && !empty($warnings)) {
+                    $code = Arr::get($warnings[0], 'code', '');
+                    $message = Arr::get($warnings[0], 'message', 'Unknown error');
+                    $status = Tracking::STATUS_UNKNOWN;
+                    
+                    // If the message contains Not Found, set status as not found
+                    if (str_contains(strtolower($message), 'not found')) {
+                        $status = Tracking::STATUS_NOT_FOUND;
+                    }
+
+                    $tracking[] = new Tracking([
+                        'carrier' => $this,
+                        'response' => $data,
+                        'trackingNumber' => $trackingNumber,
+                        'status' => $status,
+                        'statusDetail' => $code . ': ' . $message,
+                        'details' => [],
                     ]);
                 }
             }
