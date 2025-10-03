@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.13 - 2025-10-04
+
+### Added
+- Add support for decimal dimension/weight units for domestic Australia Post PAC rates.
+
+### Changed
+- Improve UPS response warnings, and better handling for tracking responses.
+
 ## 1.2.12 - 2025-08-29
 
 ### Fixed
