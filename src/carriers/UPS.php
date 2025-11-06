@@ -130,6 +130,7 @@ class UPS extends AbstractCarrier
     protected ?string $pickupType = '01';
     protected bool $includeInsurance = false;
     protected bool $addDeclaredValue = false;
+    protected string $apiVersion = 'v2409';
 
     private array $pickupCodes = [
         '01' => 'Daily Pickup',
@@ -252,7 +253,7 @@ class UPS extends AbstractCarrier
         }
 
         $request = new Request([
-            'endpoint' => 'api/rating/v1/Shop',
+            'endpoint' => "api/rating/$this->apiVersion/Shop",
             'payload' => [
                 'json' => $payload,
             ],
@@ -316,7 +317,7 @@ class UPS extends AbstractCarrier
 
             $request = new Request([
                 'method' => 'GET',
-                'endpoint' => "api/track/v1/details/{$trackingNumber}",
+                'endpoint' => "api/track/$this->apiVersion/details/{$trackingNumber}",
             ]);
 
             $data = $this->fetchTracking($request, function(Response $response) {
@@ -471,7 +472,7 @@ class UPS extends AbstractCarrier
         $payload['ShipmentRequest']['Shipment']['Shipper']['ShipperNumber'] = $this->accountNumber;
 
         $request = new Request([
-            'endpoint' => 'api/shipments/v1/ship',
+            'endpoint' => "api/shipments/$this->apiVersion/ship",
             'payload' => [
                 'json' => $payload,
             ],
@@ -517,7 +518,7 @@ class UPS extends AbstractCarrier
 
         // Fetch an access token first
         $authResponse = Json::decode((string)(new HttpClient())
-            ->request('POST', $url . 'security/v1/oauth/token', [
+            ->request('POST', $url . "security/$this->apiVersion/oauth/token", [
                 'headers' => [
                     'Content-Type' => 'application/x-www-form-urlencoded',
                     'x-merchant-id' => $this->clientId,
