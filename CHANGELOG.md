@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.14 - 2025-11-07
+
+### Changed
+- Update UPS API version to `v2409`.
+
 ## 1.2.13 - 2025-10-04
 
 ### Added
