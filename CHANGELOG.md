@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.15 - 2025-11-19
+
+### Fixed
+- Fix an error for UPS Tracking requests.
+
 ## 1.2.14 - 2025-11-07
 
 ### Changed
