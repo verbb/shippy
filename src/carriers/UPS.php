@@ -317,7 +317,7 @@ class UPS extends AbstractCarrier
 
             $request = new Request([
                 'method' => 'GET',
-                'endpoint' => "api/track/$this->apiVersion/details/{$trackingNumber}",
+                'endpoint' => "api/track/v1/details/{$trackingNumber}",
             ]);
 
             $data = $this->fetchTracking($request, function(Response $response) {
