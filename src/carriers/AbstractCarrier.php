@@ -214,8 +214,13 @@ abstract class AbstractCarrier extends Model implements CarrierInterface
         // Allow carriers to modify the request before it's sent
         $this->beforeFetchRates($request);
 
-        Shippy::debug('{name} Rate Request: {endpoint}: {payload}', [
+        $httpClient = $request->getHttpClient() ?? $this->getHttpClient();
+        $baseUri = $httpClient ? (string)$httpClient->getConfig('base_uri') : '';
+
+        Shippy::debug('{name} Rate Request [{method}]: {baseUri}{endpoint}: {payload}', [
             'name' => static::getName(),
+            'method' => $request->getMethod(),
+            'baseUri' => $baseUri,
             'endpoint' => $request->getEndpoint(),
             'payload' => Json::encode($request->getPayload()),
         ]);
