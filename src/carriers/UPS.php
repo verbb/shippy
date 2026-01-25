@@ -518,7 +518,7 @@ class UPS extends AbstractCarrier
 
         // Fetch an access token first
         $authResponse = Json::decode((string)(new HttpClient())
-            ->request('POST', $url . "security/$this->apiVersion/oauth/token", [
+            ->request('POST', $url . "security/v1/oauth/token", [
                 'headers' => [
                     'Content-Type' => 'application/x-www-form-urlencoded',
                     'x-merchant-id' => $this->clientId,
