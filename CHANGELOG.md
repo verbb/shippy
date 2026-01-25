@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.16 - 2026-01-26
+
+### Added
+- Add extra debug information to requests for HTTP method and base URI.
+
+### Fixed
+- Fix UPS OAuth calls not using the `v1` version endpoint.
+
 ## 1.2.15 - 2025-11-19
 
 ### Fixed
