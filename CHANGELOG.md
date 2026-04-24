@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.17 - 2026-04-24
+
+### Added
+- Add support for USPS setting a `priceType` to control Contract/Commercial/Retail rates.
+
 ## 1.2.16 - 2026-01-26
 
 ### Added
