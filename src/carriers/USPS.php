@@ -126,6 +126,7 @@ class USPS extends AbstractCarrier
 
     protected ?string $clientId = null;
     protected ?string $clientSecret = null;
+    protected ?string $priceType = 'COMMERCIAL';
     protected ?string $accountNumber = null;
     protected ?string $customerRegistrationId = null;
     protected ?string $mailerId = null;
@@ -154,6 +155,17 @@ class USPS extends AbstractCarrier
     public function setClientSecret(?string $clientSecret): USPS
     {
         $this->clientSecret = $clientSecret;
+        return $this;
+    }
+
+    public function getPriceType(): ?string
+    {
+        return $this->priceType;
+    }
+
+    public function setPriceType(?string $priceType): USPS
+    {
+        $this->priceType = $priceType;
         return $this;
     }
 
@@ -206,7 +218,11 @@ class USPS extends AbstractCarrier
      */
     public function getRates(Shipment $shipment): ?RateResponse
     {
-        $this->validate('clientId', 'clientSecret', 'accountNumber');
+        $this->validate('clientId', 'clientSecret');
+
+        if ($this->priceType === 'CONTRACT') {
+            $this->validate('accountNumber');
+        }
 
         $shipDate = (new DateTime())->modify('+1 day')->format('Y-m-d');
 
@@ -215,8 +231,7 @@ class USPS extends AbstractCarrier
         $payload = [
             'originZIPCode' => $shipment->getFrom()->getPostalCode(),
             'mailingDate' => $shipDate,
-            'accountType' => 'EPS',
-            'accountNumber' => $this->accountNumber,
+            'priceType' => $this->priceType ?: 'COMMERCIAL',
 
             // Use values for a single box, then multiple afterwards, due to lack of API support for multi-boxes
             'length' => max((float)$box?->getLength(2), 0.1),
@@ -224,6 +239,11 @@ class USPS extends AbstractCarrier
             'height' => max((float)$box?->getHeight(2), 0.1),
             'weight' => max((float)$box?->getWeight(2), 0.1),
         ];
+
+        if (($this->priceType ?: 'COMMERCIAL') === 'CONTRACT') {
+            $payload['accountType'] = 'EPS';
+            $payload['accountNumber'] = $this->accountNumber;
+        }
 
         if (self::isDomestic($shipment->getTo()->getCountryCode())) {
             $payload = array_merge($payload, [
