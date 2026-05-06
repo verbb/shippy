@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.18 - 2026-05-06
+
+### Added
+- Add support for `illuminate/collections` 13.0+.
+
 ## 1.2.17 - 2026-04-24
 
 ### Added
