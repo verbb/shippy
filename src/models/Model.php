@@ -80,7 +80,7 @@ class Model implements JsonSerializable
         $this->events = new EventDispatcher();
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->toArray();
     }
