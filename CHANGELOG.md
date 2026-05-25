@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.19 - 2026-05-26
+
+### Fixed
+- Fix an error with return type for `jsonSerialize()`.
+
 ## 1.2.18 - 2026-05-06
 
 ### Added
