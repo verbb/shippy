@@ -21,7 +21,7 @@ Shippy supplies several object classes to abstract things. Most notable are:
 - [Shipment](docs:models/shipment)
 - [Label](docs:models/label)
 
-See the [Models](docs:models) section for a full list of models.
+See the Models section for a full list of models.
 
 Any Shippy model can be initialized in the following ways — depending on your preference. In all cases, you're free to mix and match, which might be beneficial depending on the logic of your app.
 

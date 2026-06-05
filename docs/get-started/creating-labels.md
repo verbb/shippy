@@ -3,7 +3,7 @@ Creating labels from a carrier involves a multi-step process:
 
 1. Create a [Shipment](docs:models/shipment) model that stores the from/to address for rates.
 1. Create one or more [Package](docs:models/package) models to represent the things you want to ship.
-1. Add one or more [Carrier](docs:models/carrier) models to fetch rates for.
+1. Add one or more Carrier classes to fetch rates for.
 1. Select the [Rate](docs:models/rate) that you want to use to create a shipment for.
 1. Generate [Label](docs:models/label) models.
 

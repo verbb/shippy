@@ -1,8 +1,8 @@
 # Custom Carrier
-Building your own carrier class will require you to implement the [CarrierInterface](docs:models/carrier-interface) and should extend the [AbstractCarrier](docs:models/abstract-carrier) class.
+Building your own carrier class will require you to implement the `CarrierInterface` and should extend the `AbstractCarrier` class.
 
 ## Carrier Anatomy
-We won't be going through every single line of code in the [AbstractCarrier](docs:models/abstract-carrier) class (that's what source code is for), but we'll walk through the major functionality and requirements to have your own carrier.
+We won't be going through every single line of code in the `AbstractCarrier` class (that's what source code is for), but we'll walk through the major functionality and requirements to have your own carrier.
 
 :::tip
 If you're like us and are more of a hands-on learner, take a look at the [carrier classes]() themselves and tinker with. These can be extended, or used as a good guide for your own carrier classes.
@@ -186,7 +186,7 @@ We then create a `$payload` variable to translate our [Shipment](docs:models/shi
 
 Next is creating a [Request](docs:models/request) model, which represents the HTTP request details such as the `method` used, the `endpoint` (relative to the HTTP Client's `baseUri`) and the `payload`. This all aligns with [Guzzle](https://docs.guzzlephp.org/en/stable/) requests.
 
-With that `Request`, we call `fetchRates()` and in a callback, we receive a [Response](docs:models/response) model containing the raw response from the carrier API. It's the job of this callback to parse the string response from the API into an array. We happen to know `Wakanda Post` fortunately uses JSON, so we can call `$response->json()` as a shortcut for `Json::decode($response->getContent())`. Now our `$data` variable is an array of whatever was sent back from the API.
+With that `Request`, we call `fetchRates()` and in a callback, we receive a `Response` model containing the raw response from the carrier API. It's the job of this callback to parse the string response from the API into an array. We happen to know `Wakanda Post` fortunately uses JSON, so we can call `$response->json()` as a shortcut for `Json::decode($response->getContent())`. Now our `$data` variable is an array of whatever was sent back from the API.
 
 We can defensively loop through some returned data, creating [Rate](docs:models/rate) models to be returned as a [RateResponse](docs:models/rate-response).
 
@@ -267,7 +267,7 @@ Let's step through this code. We call `$this->validate('apiKey');` to ensure tha
 
 Next is creating a [Request](docs:models/request) model, which represents the HTTP request details such as the `method` used, the `endpoint` (relative to the HTTP Client's `baseUri`) and the `payload`. This all aligns with [Guzzle](https://docs.guzzlephp.org/en/stable/) requests.
 
-With that `Request`, we call `fetchTracking()` and in a callback, we receive a [Response](docs:models/response) model containing the raw response from the carrier API. It's the job of this callback to parse the string response from the API into an array. We happen to know `Wakanda Post` fortunately uses JSON, so we can call `$response->json()` as a shortcut for `Json::decode($response->getContent())`. Now our `$data` variable is an array of whatever was sent back from the API.
+With that `Request`, we call `fetchTracking()` and in a callback, we receive a `Response` model containing the raw response from the carrier API. It's the job of this callback to parse the string response from the API into an array. We happen to know `Wakanda Post` fortunately uses JSON, so we can call `$response->json()` as a shortcut for `Json::decode($response->getContent())`. Now our `$data` variable is an array of whatever was sent back from the API.
 
 We can defensively loop through some returned data, creating [Tracking](docs:models/tracking) models to be returned as a [TrackingResponse](docs:models/tracking-response). We cover mapping the status from the provider into well-defined Shippy statuses in `_mapTrackingStatus()`, and also handle creating any [TrackingDetail](docs:models/tracking-detail) models.
 
@@ -356,7 +356,7 @@ Let's step through this code. We call `$this->validate('apiKey');` to ensure tha
 
 Next is creating a [Request](docs:models/request) model, which represents the HTTP request details such as the `method` used, the `endpoint` (relative to the HTTP Client's `baseUri`) and the `payload`. This all aligns with [Guzzle](https://docs.guzzlephp.org/en/stable/) requests.
 
-With that `Request`, we call `fetchLabels()` and in a callback, we receive a [Response](docs:models/response) model containing the raw response from the carrier API. It's the job of this callback to parse the string response from the API into an array. We happen to know `Wakanda Post` fortunately uses JSON, so we can call `$response->json()` as a shortcut for `Json::decode($response->getContent())`. Now our `$data` variable is an array of whatever was sent back from the API.
+With that `Request`, we call `fetchLabels()` and in a callback, we receive a `Response` model containing the raw response from the carrier API. It's the job of this callback to parse the string response from the API into an array. We happen to know `Wakanda Post` fortunately uses JSON, so we can call `$response->json()` as a shortcut for `Json::decode($response->getContent())`. Now our `$data` variable is an array of whatever was sent back from the API.
 
 We can defensively loop through some returned data, creating [Label](docs:models/label) models to be returned as a [LabelResponse](docs:models/label-response). 
 
