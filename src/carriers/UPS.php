@@ -132,6 +132,8 @@ class UPS extends AbstractCarrier
     protected bool $addDeclaredValue = false;
     protected string $apiVersion = 'v2409';
 
+    private static array $accessTokenCache = [];
+
     private array $pickupCodes = [
         '01' => 'Daily Pickup',
         '03' => 'Customer Counter',
@@ -517,6 +519,29 @@ class UPS extends AbstractCarrier
         $transactionSrc = 'Shippy ' . InstalledVersions::getPrettyVersion('verbb/shippy');
 
         // Fetch an access token first
+
+        $accessToken = $this->getAccessToken($url);
+
+        return new HttpClient([
+            'base_uri' => $url,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
+                'transId' => $transId,
+                'transactionSrc' => $transactionSrc,
+            ],
+        ]);
+    }
+
+    protected function getAccessToken(string $url): string
+    {
+        $cacheKey = md5($url . '|' . $this->clientId);
+        $cachedToken = self::$accessTokenCache[$cacheKey] ?? null;
+
+        if (($cachedToken['expiresAt'] ?? 0) > time()) {
+            return $cachedToken['token'];
+        }
+
         $authResponse = Json::decode((string)(new HttpClient())
             ->request('POST', $url . "security/v1/oauth/token", [
                 'headers' => [
@@ -529,15 +554,17 @@ class UPS extends AbstractCarrier
                 ],
             ])->getBody());
 
-        return new HttpClient([
-            'base_uri' => $url,
-            'headers' => [
-                'Authorization' => 'Bearer ' . $authResponse['access_token'] ?? '',
-                'Content-Type' => 'application/json',
-                'transId' => $transId,
-                'transactionSrc' => $transactionSrc,
-            ],
-        ]);
+        $accessToken = $authResponse['access_token'] ?? '';
+
+        if ($accessToken !== '') {
+            $ttl = max(60, (int)($authResponse['expires_in'] ?? 3600) - 60);
+            self::$accessTokenCache[$cacheKey] = [
+                'token' => $accessToken,
+                'expiresAt' => time() + $ttl,
+            ];
+        }
+
+        return $accessToken;
     }
 
 
