@@ -538,7 +538,7 @@ class UPS extends AbstractCarrier
         $cacheKey = md5($url . '|' . $this->clientId);
         $cachedToken = self::$accessTokenCache[$cacheKey] ?? null;
 
-        if (($cachedToken['expiresAt'] ?? 0) > time()) {
+        if ($cachedToken !== null && ($cachedToken['expiresAt'] ?? 0) > time()) {
             return $cachedToken['token'];
         }
 
