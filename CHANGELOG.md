@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.20 - 2026-06-15
+
+### Changed
+- Set HTTP client for the request in AbstractCarrier.
+- Implement access token caching in UPS carrier.
+
+### Fixed
+- Fix PHP warning when UPS access token cache is empty.
+
 ## 1.2.19 - 2026-05-26
 
 ### Fixed
