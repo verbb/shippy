@@ -67,6 +67,56 @@ class SecondClass extends RoyalMailRates
                     20000 => 1055,
                 ],
             ],
+            '2025-10' => [
+                self::LETTER => [
+                    100 => 87,
+                ],
+                self::LARGE_LETTER => [
+                    100 => 155,
+                    250 => 180,
+                    500 => 220,
+                    750 => 250,
+                ],
+                self::SMALL_PARCEL_WIDE => [
+                    2000 => 350,
+                ],
+                self::SMALL_PARCEL_DEEP => [
+                    2000 => 350,
+                ],
+                self::SMALL_PARCEL_BIGGER => [
+                    2000 => 350,
+                ],
+                self::MEDIUM_PARCEL => [
+                    2000 => 525,
+                    10000 => 695,
+                    20000 => 1120,
+                ],
+            ],
+            '2026' => [
+                self::LETTER => [
+                    100 => 91,
+                ],
+                self::LARGE_LETTER => [
+                    100 => 155,
+                    250 => 190,
+                    500 => 240,
+                    750 => 270,
+                ],
+                self::SMALL_PARCEL_WIDE => [
+                    2000 => 395,
+                ],
+                self::SMALL_PARCEL_DEEP => [
+                    2000 => 395,
+                ],
+                self::SMALL_PARCEL_BIGGER => [
+                    2000 => 395,
+                ],
+                self::MEDIUM_PARCEL => [
+                    2000 => 625,
+                    10000 => 805,
+                    20000 => 1245,
+                ],
+            ],
         ];
 
         $boxes = [

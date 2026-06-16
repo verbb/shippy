@@ -65,6 +65,54 @@ class Tracked24 extends RoyalMailRates
                     20000 => 1399,
                 ],
             ],
+            '2025-10' => [
+                self::LARGE_LETTER => [
+                    1000 => 395,
+                ],
+                self::SMALL_PARCEL_WIDE => [
+                    2000 => 575,
+                ],
+                self::SMALL_PARCEL_DEEP => [
+                    2000 => 575,
+                ],
+                self::SMALL_PARCEL_BIGGER => [
+                    2000 => 575,
+                ],
+                self::MEDIUM_PARCEL => [
+                    2000 => 835,
+                    10000 => 1035,
+                    20000 => 1575,
+                ],
+                self::TUBE => [
+                    2000 => 835,
+                    10000 => 1035,
+                    20000 => 1575,
+                ],
+            ],
+            '2026' => [
+                self::LARGE_LETTER => [
+                    1000 => 395,
+                ],
+                self::SMALL_PARCEL_WIDE => [
+                    2000 => 570,
+                ],
+                self::SMALL_PARCEL_DEEP => [
+                    2000 => 570,
+                ],
+                self::SMALL_PARCEL_BIGGER => [
+                    2000 => 570,
+                ],
+                self::MEDIUM_PARCEL => [
+                    2000 => 825,
+                    10000 => 1025,
+                    20000 => 1565,
+                ],
+                self::TUBE => [
+                    2000 => 825,
+                    10000 => 1025,
+                    20000 => 1565,
+                ],
+            ],
         ];
 
         $boxes = [
@@ -72,7 +120,7 @@ class Tracked24 extends RoyalMailRates
                 'length' => 353,
                 'width' => 250,
                 'height' => 25,
-                'weight' => 750,
+                'weight' => 1000,
             ],
             self::SMALL_PARCEL_WIDE => [
                 'length' => 450,

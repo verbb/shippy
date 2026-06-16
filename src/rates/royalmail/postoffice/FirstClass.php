@@ -63,6 +63,56 @@ class FirstClass extends RoyalMailRates
                     20000 => 1369,
                 ],
             ],
+            '2025-10' => [
+                self::LETTER => [
+                    100 => 170,
+                ],
+                self::LARGE_LETTER => [
+                    100 => 315,
+                    250 => 360,
+                    500 => 360,
+                    750 => 360,
+                ],
+                self::SMALL_PARCEL_WIDE => [
+                    2000 => 499,
+                ],
+                self::SMALL_PARCEL_DEEP => [
+                    2000 => 499,
+                ],
+                self::SMALL_PARCEL_BIGGER => [
+                    2000 => 499,
+                ],
+                self::MEDIUM_PARCEL => [
+                    2000 => 719,
+                    10000 => 899,
+                    20000 => 1369,
+                ],
+            ],
+            '2026' => [
+                self::LETTER => [
+                    100 => 180,
+                ],
+                self::LARGE_LETTER => [
+                    100 => 330,
+                    250 => 360,
+                    500 => 360,
+                    750 => 360,
+                ],
+                self::SMALL_PARCEL_WIDE => [
+                    2000 => 545,
+                ],
+                self::SMALL_PARCEL_DEEP => [
+                    2000 => 545,
+                ],
+                self::SMALL_PARCEL_BIGGER => [
+                    2000 => 545,
+                ],
+                self::MEDIUM_PARCEL => [
+                    2000 => 805,
+                    10000 => 1005,
+                    20000 => 1545,
+                ],
+            ],
         ];
 
         $boxes = [
