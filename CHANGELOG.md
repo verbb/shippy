@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.21 - 2026-06-16
+
+### Added
+- Add Royal Mail static rates for October 2025 and April 2026 price changes.
+
 ## 1.2.20 - 2026-06-15
 
 ### Changed
