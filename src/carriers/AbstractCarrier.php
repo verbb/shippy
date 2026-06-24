@@ -211,110 +211,149 @@ abstract class AbstractCarrier extends Model implements CarrierInterface
 
     protected function fetchRates(Request $request, callable $callback): array
     {
-        // Allow carriers to modify the request before it's sent
-        $this->beforeFetchRates($request);
+        try {
+            // Allow carriers to modify the request before it's sent
+            $this->beforeFetchRates($request);
 
-        $httpClient = $request->getHttpClient() ?? $this->getHttpClient();
-        $request->setHttpClient($httpClient);
-        $baseUri = $httpClient ? (string)$httpClient->getConfig('base_uri') : '';
+            Shippy::debug('{name} Rate Request [{method}]: {endpoint}: {payload}', [
+                'name' => static::getName(),
+                'method' => $request->getMethod(),
+                'endpoint' => $request->getEndpoint(),
+                'payload' => Json::encode($request->getPayload()),
+            ]);
 
-        Shippy::debug('{name} Rate Request [{method}]: {baseUri}{endpoint}: {payload}', [
-            'name' => static::getName(),
-            'method' => $request->getMethod(),
-            'baseUri' => $baseUri,
-            'endpoint' => $request->getEndpoint(),
-            'payload' => Json::encode($request->getPayload()),
-        ]);
+            // Perform the actual request to fetch the data from the carrier
+            $response = $this->request($request);
 
-        // Perform the actual request to fetch the data from the carrier
-        $response = $this->request($request);
+            $httpClient = $request->getHttpClient();
+            $baseUri = $httpClient ? (string)$httpClient->getConfig('base_uri') : '';
 
-        // Allow carriers to define processing of the raw data from the carrier (JSON, XML, etc).
-        // It should always return an array transforming the raw data
-        $data = $callback($response);
+            if ($baseUri) {
+                Shippy::debug('{name} Rate Request URI: {baseUri}{endpoint}', [
+                    'name' => static::getName(),
+                    'baseUri' => $baseUri,
+                    'endpoint' => $request->getEndpoint(),
+                ]);
+            }
 
-        // If there's been any Guzzle-level errors, inject those into the data as a "private" key
-        if ($response->getErrorMessage()) {
-            $data['__errors'][] = "{$response->getStatusCode()} {$response->getErrorMessage()}";
+            // Allow carriers to define processing of the raw data from the carrier (JSON, XML, etc).
+            // It should always return an array transforming the raw data
+            $data = $callback($response);
+
+            // If there's been any Guzzle-level errors, inject those into the data as a "private" key
+            if ($response->getErrorMessage()) {
+                $data['__errors'][] = "{$response->getStatusCode()} {$response->getErrorMessage()}";
+            }
+
+            // Allow carriers to modify the data after it's been processed
+            $this->afterFetchRates($data);
+
+            Shippy::debug('{name} Rate Response: {response}', [
+                'name' => static::getName(),
+                'response' => $response->getContent(),
+            ]);
+
+            return $data;
+        } catch (Throwable $exception) {
+            Shippy::error('{name} Rate Request Error: “{message}” {file}:{line}', [
+                'name' => static::getName(),
+                'message' => $exception->getMessage(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+            ]);
+
+            return ['__errors' => [$exception->getMessage()]];
         }
-
-        // Allow carriers to modify the data after it's been processed
-        $this->afterFetchRates($data);
-
-        Shippy::debug('{name} Rate Response: {response}', [
-            'name' => static::getName(),
-            'response' => $response->getContent(),
-        ]);
-
-        return $data;
     }
 
     protected function fetchTracking(Request $request, callable $callback): array
     {
-        // Allow carriers to modify the request before it's sent
-        $this->beforeFetchTracking($request);
+        try {
+            // Allow carriers to modify the request before it's sent
+            $this->beforeFetchTracking($request);
 
-        Shippy::debug('{name} Tracking Request: {endpoint}: {payload}', [
-            'name' => static::getName(),
-            'endpoint' => $request->getEndpoint(),
-            'payload' => Json::encode($request->getPayload()),
-        ]);
+            Shippy::debug('{name} Tracking Request: {endpoint}: {payload}', [
+                'name' => static::getName(),
+                'endpoint' => $request->getEndpoint(),
+                'payload' => Json::encode($request->getPayload()),
+            ]);
 
-        // Perform the actual request to fetch the data from the carrier
-        $response = $this->request($request);
+            // Perform the actual request to fetch the data from the carrier
+            $response = $this->request($request);
 
-        // Allow carriers to define processing of the raw data from the carrier (JSON, XML, etc).
-        // It should always return an array transforming the raw data
-        $data = $callback($response);
+            // Allow carriers to define processing of the raw data from the carrier (JSON, XML, etc).
+            // It should always return an array transforming the raw data
+            $data = $callback($response);
 
-        // If there's been any Guzzle-level errors, inject those into the data as a "private" key
-        if ($response->getErrorMessage()) {
-            $data['__errors'][] = "{$response->getStatusCode()} {$response->getErrorMessage()}";
+            // If there's been any Guzzle-level errors, inject those into the data as a "private" key
+            if ($response->getErrorMessage()) {
+                $data['__errors'][] = "{$response->getStatusCode()} {$response->getErrorMessage()}";
+            }
+
+            // Allow carriers to modify the data after it's been processed
+            $this->afterFetchTracking($data);
+
+            Shippy::debug('{name} Tracking Response: {response}', [
+                'name' => static::getName(),
+                'response' => $response->getContent(),
+            ]);
+
+            return $data;
+        } catch (Throwable $exception) {
+            Shippy::error('{name} Tracking Request Error: “{message}” {file}:{line}', [
+                'name' => static::getName(),
+                'message' => $exception->getMessage(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+            ]);
+
+            return ['__errors' => [$exception->getMessage()]];
         }
-
-        // Allow carriers to modify the data after it's been processed
-        $this->afterFetchTracking($data);
-
-        Shippy::debug('{name} Tracking Response: {response}', [
-            'name' => static::getName(),
-            'response' => $response->getContent(),
-        ]);
-
-        return $data;
     }
 
     protected function fetchLabels(Request $request, callable $callback): array
     {
-        // Allow carriers to modify the request before it's sent
-        $this->beforeFetchLabels($request);
+        try {
+            // Allow carriers to modify the request before it's sent
+            $this->beforeFetchLabels($request);
 
-        Shippy::debug('{name} Labels Request: {endpoint}: {payload}', [
-            'name' => static::getName(),
-            'endpoint' => $request->getEndpoint(),
-            'payload' => Json::encode($request->getPayload()),
-        ]);
+            Shippy::debug('{name} Labels Request: {endpoint}: {payload}', [
+                'name' => static::getName(),
+                'endpoint' => $request->getEndpoint(),
+                'payload' => Json::encode($request->getPayload()),
+            ]);
 
-        // Perform the actual request to fetch the data from the carrier
-        $response = $this->request($request);
+            // Perform the actual request to fetch the data from the carrier
+            $response = $this->request($request);
 
-        // Allow carriers to define processing of the raw data from the carrier (JSON, XML, etc).
-        // It should always return an array transforming the raw data
-        $data = $callback($response);
+            // Allow carriers to define processing of the raw data from the carrier (JSON, XML, etc).
+            // It should always return an array transforming the raw data
+            $data = $callback($response);
 
-        // If there's been any Guzzle-level errors, inject those into the data as a "private" key
-        if ($response->getErrorMessage()) {
-            $data['__errors'][] = "{$response->getStatusCode()} {$response->getErrorMessage()}";
+            // If there's been any Guzzle-level errors, inject those into the data as a "private" key
+            if ($response->getErrorMessage()) {
+                $data['__errors'][] = "{$response->getStatusCode()} {$response->getErrorMessage()}";
+            }
+
+            // Allow carriers to modify the data after it's been processed
+            $this->afterFetchLabels($data);
+
+            Shippy::debug('{name} Labels Response: {response}', [
+                'name' => static::getName(),
+                'response' => $response->getContent(),
+            ]);
+
+            return $data;
+        } catch (Throwable $exception) {
+            Shippy::error('{name} Labels Request Error: “{message}” {file}:{line}', [
+                'name' => static::getName(),
+                'message' => $exception->getMessage(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+            ]);
+
+            return ['__errors' => [$exception->getMessage()]];
         }
-
-        // Allow carriers to modify the data after it's been processed
-        $this->afterFetchLabels($data);
-
-        Shippy::debug('{name} Labels Response: {response}', [
-            'name' => static::getName(),
-            'response' => $response->getContent(),
-        ]);
-
-        return $data;
     }
 
     protected function request(Request $request): ?Response
@@ -322,6 +361,7 @@ abstract class AbstractCarrier extends Model implements CarrierInterface
         try {
             // Allow requests to define an HTTP client to initiate the request with.
             $httpClient = $request->getHttpClient() ?? $this->getHttpClient();
+            $request->setHttpClient($httpClient);
 
             $response = $httpClient->request($request->getMethod(), $request->getEndpoint(), $request->getPayload());
 

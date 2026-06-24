@@ -4,6 +4,8 @@ namespace verbb\shippy\models;
 use verbb\shippy\carriers\CarrierInterface;
 use verbb\shippy\Shippy;
 
+use Throwable;
+
 class Shipment extends Model
 {
     // Properties
@@ -93,49 +95,60 @@ class Shipment extends Model
         $rates = [];
 
         foreach ($this->getCarriers() as $carrier) {
-            // Clone the original shipment, as it may be modified by each carrier
-            $shipment = clone $this;
+            try {
+                // Clone the original shipment, as it may be modified by each carrier
+                $shipment = clone $this;
 
-            // Convert each package to the units defined by the carrier
-            $shipment->getPackagesForCarrier($carrier);
+                // Convert each package to the units defined by the carrier
+                $shipment->getPackagesForCarrier($carrier);
 
-            // Fetch the rates according to the carrier
-            $rateResponse = $carrier->getRates($shipment);
+                // Fetch the rates according to the carrier
+                $rateResponse = $carrier->getRates($shipment);
 
-            if (!$rateResponse) {
-                continue;
-            }
+                if (!$rateResponse) {
+                    continue;
+                }
 
-            if (!$rateResponse->getRates()) {
-                Shippy::debug('{name} Rates: No rates matched.', [
+                if (!$rateResponse->getRates()) {
+                    Shippy::debug('{name} Rates: No rates matched.', [
+                        'name' => $carrier::getName(),
+                    ]);
+                }
+
+                // Filter any rates that are 0 value, or are disallowed services
+                $rateResponse->rates = array_filter($rateResponse->getRates(), function($rate) use ($carrier) {
+                    if ($rate->getRate() <= 0) {
+                        return false;
+                    }
+
+                    if (!empty($carrier->getAllowedServiceCodes()) && !in_array($rate->getServiceCode(), $carrier->getAllowedServiceCodes())) {
+                        return false;
+                    }
+
+                    return true;
+                });
+
+                $rates[$carrier->displayName()] = $rateResponse->getRates();
+
+                if ($responseErrors = $rateResponse->getErrors()) {
+                    $errors[$carrier->displayName()] = $responseErrors;
+                } else {
+                    $response[$carrier->displayName()] = $rateResponse->getResponse();
+                }
+            } catch (Throwable $exception) {
+                Shippy::error('{name} Rates Error: “{message}” {file}:{line}', [
                     'name' => $carrier::getName(),
+                    'message' => $exception->getMessage(),
+                    'file' => $exception->getFile(),
+                    'line' => $exception->getLine(),
                 ]);
-            }
 
-            // Filter any rates that are 0 value, or are disallowed services
-            $rateResponse->rates = array_filter($rateResponse->getRates(), function($rate) use ($carrier) {
-                if ($rate->getRate() <= 0) {
-                    return false;
-                }
-
-                if (!empty($carrier->getAllowedServiceCodes()) && !in_array($rate->getServiceCode(), $carrier->getAllowedServiceCodes())) {
-                    return false;
-                }
-
-                return true;
-            });
-
-            $rates[$carrier->displayName()] = $rateResponse->getRates();
-
-            if ($responseErrors = $rateResponse->getErrors()) {
-                $errors[$carrier->displayName()] = $responseErrors;
-            } else {
-                $response[$carrier->displayName()] = $rateResponse->getResponse();
+                $errors[$carrier->displayName()] = [$exception->getMessage()];
             }
         }
 
         // Merge here for performance
-        $rates = array_merge(...array_values($rates));
+        $rates = $rates ? array_merge(...array_values($rates)) : [];
 
         // Sort by cost
         usort($rates, function(Rate $a, Rate $b) {
@@ -156,19 +169,38 @@ class Shipment extends Model
 
         $carrier = $rate->getCarrier();
 
-        // Convert each package to the units defined by the carrier
-        $shipment->getPackagesForCarrier($carrier);
+        try {
+            // Convert each package to the units defined by the carrier
+            $shipment->getPackagesForCarrier($carrier);
 
-        // Fetch the labels according to the carrier
-        $labelResponse = $carrier->getLabels($shipment, $rate, $options);
+            // Fetch the labels according to the carrier
+            $labelResponse = $carrier->getLabels($shipment, $rate, $options);
 
-        if (!$labelResponse->getLabels()) {
-            Shippy::debug('{name} Labels: No labels available.', [
+            if (!$labelResponse) {
+                return new LabelResponse([
+                    'errors' => ['No label response returned.'],
+                ]);
+            }
+
+            if (!$labelResponse->getLabels()) {
+                Shippy::debug('{name} Labels: No labels available.', [
+                    'name' => $carrier::getName(),
+                ]);
+            }
+
+            return $labelResponse;
+        } catch (Throwable $exception) {
+            Shippy::error('{name} Labels Error: “{message}” {file}:{line}', [
                 'name' => $carrier::getName(),
+                'message' => $exception->getMessage(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+            ]);
+
+            return new LabelResponse([
+                'errors' => [$exception->getMessage()],
             ]);
         }
-
-        return $labelResponse;
     }
 
     public function getPackagesForCarrier(CarrierInterface $carrier): array
