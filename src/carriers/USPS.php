@@ -132,6 +132,8 @@ class USPS extends AbstractCarrier
     protected ?string $mailerId = null;
     protected bool $useLegacyApi = false;
 
+    private static array $accessTokenCache = [];
+
 
     // Public Methods
     // =========================================================================
@@ -526,7 +528,24 @@ class USPS extends AbstractCarrier
     {
         $domain = $this->getUseLegacyApi() ? 'api.usps.com' : 'apis.usps.com';
 
-        // Fetch an access token first
+        return new HttpClient([
+            'base_uri' => "https://$domain/",
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->getAccessToken($domain),
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+    }
+
+    protected function getAccessToken(string $domain): string
+    {
+        $cacheKey = md5($domain . '|' . $this->clientId);
+        $cachedToken = self::$accessTokenCache[$cacheKey] ?? null;
+
+        if ($cachedToken !== null && ($cachedToken['expiresAt'] ?? 0) > time()) {
+            return $cachedToken['token'];
+        }
+
         $authResponse = Json::decode((string)(new HttpClient())
             ->request('POST', "https://$domain/oauth2/v3/token", [
                 'json' => [
@@ -536,13 +555,17 @@ class USPS extends AbstractCarrier
                 ],
             ])->getBody());
 
-        return new HttpClient([
-            'base_uri' => "https://$domain/",
-            'headers' => [
-                'Authorization' => 'Bearer ' . $authResponse['access_token'] ?? '',
-                'Content-Type' => 'application/json',
-            ],
-        ]);
+        $accessToken = $authResponse['access_token'] ?? '';
+
+        if ($accessToken !== '') {
+            $ttl = max(60, (int)($authResponse['expires_in'] ?? 3600) - 60);
+            self::$accessTokenCache[$cacheKey] = [
+                'token' => $accessToken,
+                'expiresAt' => time() + $ttl,
+            ];
+        }
+
+        return $accessToken;
     }
 
 

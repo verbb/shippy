@@ -132,6 +132,8 @@ class FedEx extends AbstractCarrier
     protected ?string $packagingType = 'YOUR_PACKAGING';
     protected ?int $insuranceAmount = null;
 
+    private static array $accessTokenCache = [];
+
 
     // Public Methods
     // =========================================================================
@@ -359,7 +361,24 @@ class FedEx extends AbstractCarrier
             $url = 'https://apis-sandbox.fedex.com/';
         }
 
-        // Fetch an access token first
+        return new HttpClient([
+            'base_uri' => $url,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->getAccessToken($url),
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+    }
+
+    protected function getAccessToken(string $url): string
+    {
+        $cacheKey = md5($url . '|' . $this->clientId);
+        $cachedToken = self::$accessTokenCache[$cacheKey] ?? null;
+
+        if ($cachedToken !== null && ($cachedToken['expiresAt'] ?? 0) > time()) {
+            return $cachedToken['token'];
+        }
+
         $authResponse = Json::decode((string)(new HttpClient())
             ->request('POST', $url . 'oauth/token', [
                 'headers' => [
@@ -372,13 +391,17 @@ class FedEx extends AbstractCarrier
                 ],
             ])->getBody());
 
-        return new HttpClient([
-            'base_uri' => $url,
-            'headers' => [
-                'Authorization' => 'Bearer ' . $authResponse['access_token'] ?? '',
-                'Content-Type' => 'application/json',
-            ],
-        ]);
+        $accessToken = $authResponse['access_token'] ?? '';
+
+        if ($accessToken !== '') {
+            $ttl = max(60, (int)($authResponse['expires_in'] ?? 3600) - 60);
+            self::$accessTokenCache[$cacheKey] = [
+                'token' => $accessToken,
+                'expiresAt' => time() + $ttl,
+            ];
+        }
+
+        return $accessToken;
     }
 
 

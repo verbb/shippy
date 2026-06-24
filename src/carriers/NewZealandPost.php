@@ -56,6 +56,8 @@ class NewZealandPost extends AbstractCarrier
     protected ?string $accountNumber = null;
     protected ?string $siteCode = null;
 
+    private static array $accessTokenCache = [];
+
 
     // Public Methods
     // =========================================================================
@@ -405,7 +407,25 @@ class NewZealandPost extends AbstractCarrier
             $url = 'https://api.uat.nzpost.co.nz/';
         }
 
-        // Fetch an access token first
+        return new HttpClient([
+            'base_uri' => $url,
+            'headers' => [
+                'client_id' => $this->clientId,
+                'Authorization' => 'Bearer ' . $this->getAccessToken(),
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+    }
+
+    protected function getAccessToken(): string
+    {
+        $cacheKey = md5('nzpost|' . $this->clientId);
+        $cachedToken = self::$accessTokenCache[$cacheKey] ?? null;
+
+        if ($cachedToken !== null && ($cachedToken['expiresAt'] ?? 0) > time()) {
+            return $cachedToken['token'];
+        }
+
         $authResponse = Json::decode((string)(new HttpClient())
             ->request('POST', 'https://oauth.nzpost.co.nz/as/token.oauth2', [
                 'query' => [
@@ -415,14 +435,17 @@ class NewZealandPost extends AbstractCarrier
                 ],
             ])->getBody());
 
-        return new HttpClient([
-            'base_uri' => $url,
-            'headers' => [
-                'client_id' => $this->clientId,
-                'Authorization' => 'Bearer ' . $authResponse['access_token'] ?? '',
-                'Content-Type' => 'application/json',
-            ],
-        ]);
+        $accessToken = $authResponse['access_token'] ?? '';
+
+        if ($accessToken !== '') {
+            $ttl = max(60, (int)($authResponse['expires_in'] ?? 3600) - 60);
+            self::$accessTokenCache[$cacheKey] = [
+                'token' => $accessToken,
+                'expiresAt' => time() + $ttl,
+            ];
+        }
+
+        return $accessToken;
     }
 
 
