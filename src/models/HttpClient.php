@@ -10,6 +10,11 @@ class HttpClient extends GuzzleClient
 {
     public function __construct(array $config = [])
     {
+        $config = array_replace([
+            'connect_timeout' => 5,
+            'timeout' => 15,
+        ], $config);
+
         // Remove error handling truncation
         // https://github.com/guzzle/guzzle/issues/2185#issuecomment-800293420
         if (!isset($config['handler'])) {
