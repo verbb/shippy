@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.2.22 - 2026-06-25
+
+### Added
+- Add default HTTP connect and request timeouts to `HttpClient`.
+- Implement access token caching in the FedEx, USPS, New Zealand Post, Aramex Australia, and Aramex New Zealand carriers.
+
+### Changed
+- Resolve the HTTP client inside `AbstractCarrier::request()` so OAuth and transport failures are caught consistently.
+- Isolate carrier failures in `Shipment::getRates()` and `Shipment::getLabels()` so one carrier outage does not abort the entire request.
+- Catch and record errors in `AbstractCarrier` rate, tracking, and label fetch helpers.
+- Refactor OAuth token handling in FedEx, USPS, New Zealand Post, Aramex Australia, and Aramex New Zealand carriers to extract access tokens before building authorization headers.
+
+### Fixed
+- Fix carrier outages (e.g. FedEx DNS/connection failures) throwing uncaught exceptions instead of returning error responses ([#21](https://github.com/verbb/shippy/issues/21)).
+
 ## 1.2.21 - 2026-06-16
 
 ### Added
