@@ -232,6 +232,19 @@ class RoyalMailRates extends StaticRates
 
     protected static function getBoxPricing(array $boxes, array $bands, int $maxCompensation = 0): array
     {
+        // Exclude the service when the shipment value exceeds what it will compensate
+        if (self::$checkCompensation && $maxCompensation && self::$shipment) {
+            $totalValue = 0;
+
+            foreach (self::$shipment->getPackages() as $package) {
+                $totalValue += (float)$package->getPrice();
+            }
+
+            if ($totalValue > $maxCompensation) {
+                return [];
+            }
+        }
+
         // Get the pricing as applicable
         $pricingBand = self::getValueForYear($bands);
 
@@ -247,11 +260,6 @@ class RoyalMailRates extends StaticRates
                 $newBox = $box;
                 $newBox['weight'] = $weight;
                 $newBox['price'] = $price;
-
-                // Check for max compensation
-                if (self::$checkCompensation && $maxCompensation && $price > $maxCompensation) {
-                    continue;
-                }
 
                 $boxesWithPricing[$newKey] = $newBox;
             }
