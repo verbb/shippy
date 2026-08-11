@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.23 - 2026-08-12
+
+### Fixed
+- Fix Royal Mail `checkCompensation` comparing postage prices to compensation limits instead of the shipment value, which caused most rates (including Tracked 24/48) to never return.
+
 ## 1.2.22 - 2026-06-25
 
 ### Added
