@@ -407,13 +407,26 @@ class DHLExpress extends AbstractCarrier
 
         $labels = [];
 
+        $documents = Arr::get($data, 'documents', []);
+        $document = Arr::get($documents, '0', []);
+
+        // Other requested documents can remain PDFs when the shipping label uses a thermal format.
+        foreach ($documents as $responseDocument) {
+            if (strtolower((string)Arr::get($responseDocument, 'typeCode')) === 'label') {
+                $document = $responseDocument;
+                break;
+            }
+        }
+
+        $imageFormat = (string)Arr::get($document, 'imageFormat', Arr::get($payload, 'outputImageProperties.encodingFormat', 'pdf'));
+
         $labels[] = new Label([
             'carrier' => $this,
             'response' => $data,
             'rate' => $rate,
             'trackingNumber' => Arr::get($data, 'shipmentTrackingNumber'),
-            'labelData' => Arr::get($data, 'documents.0.content', ''),
-            'labelMime' => 'application/pdf',
+            'labelData' => Arr::get($document, 'content', ''),
+            'labelMime' => $this->_getLabelMime($imageFormat),
         ]);
 
         return new LabelResponse([
@@ -450,6 +463,18 @@ class DHLExpress extends AbstractCarrier
 
     // Private Methods
     // =========================================================================
+
+    private function _getLabelMime(string $imageFormat): string
+    {
+        return match (strtolower($imageFormat)) {
+            'pdf' => 'application/pdf',
+            'gif' => 'image/gif',
+            'jpg', 'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'tif', 'tiff' => 'image/tiff',
+            default => 'application/octet-stream',
+        };
+    }
 
     private function _mapTrackingStatus(string $status): string
     {
