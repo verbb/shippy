@@ -27,3 +27,20 @@ new UPS([
     'accountNumber' => '••••••••••••••••',
 ]);
 ```
+
+## Label Formats
+UPS creates labels as GIF images by default. You can request another output type by passing UPS `LabelSpecification` values to the shipment's `getLabels()` method.
+
+```php
+$labelResponse = $shipment->getLabels($rate, [
+    'LabelImageFormat' => [
+        'Code' => 'ZPL',
+    ],
+    'LabelStockSize' => [
+        'Height' => '6',
+        'Width' => '4',
+    ],
+]);
+```
+
+UPS supports `GIF`, `ZPL`, `EPL`, and `SPL`. UPS uses the `EPL` code for EPL2 output.

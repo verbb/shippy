@@ -29,3 +29,15 @@ new USPS([
     'mailerId' => '••••••••••••••••',
 ]);
 ```
+
+## Label Formats
+USPS creates labels as PDFs by default. You can request another output type by passing `labelFormat` to the shipment's `getLabels()` method.
+
+```php
+$labelResponse = $shipment->getLabels($rate, [
+    'labelFormat' => 'ZPL203DPI',
+    'labelType' => '4X6LABEL',
+]);
+```
+
+USPS supports raster, vector, and printer-command formats including `PDF`, `TIFF`, `JPG`, `SVG`, `ZPL203DPI`, and `ZPL300DPI`. Availability can depend on the label endpoint, mail class, and USPS account permissions.

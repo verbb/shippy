@@ -297,6 +297,12 @@ class CanadaPost extends AbstractCarrier
         $this->validate('username', 'password', 'customerNumber', 'contractId');
 
         $mailingDate = (new DateTime())->modify('+1 day')->format('Y-m-d');
+        $labelFormat = (string)Arr::get($options, 'encoding', 'PDF');
+        $outputFormat = Arr::get($options, 'outputFormat');
+
+        if (strtoupper($labelFormat) === 'ZPL' && !$outputFormat) {
+            $outputFormat = '4x6';
+        }
 
         $payload = [
             'group-id' => Arr::get($options, 'groupId', '4326432'),
@@ -328,6 +334,10 @@ class CanadaPost extends AbstractCarrier
                         'country-code' => $shipment->getTo()->getCountryCode(),
                     ],
                 ],
+                'print-preferences' => array_filter([
+                    'output-format' => $outputFormat,
+                    'encoding' => $labelFormat,
+                ]),
                 'preferences' => [
                     'show-packing-instructions' => true,
                     'show-postage-rate' => false,
@@ -373,10 +383,12 @@ class CanadaPost extends AbstractCarrier
 
         $labels = [];
         $labelUrl = '';
+        $labelMime = $this->getLabelMime($labelFormat);
 
         foreach (Arr::get($data, 'links.link', []) as $link) {
-            if (Arr::get($link, '@media-type') === 'application/pdf') {
+            if (Arr::get($link, '@rel') === 'label') {
                 $labelUrl = Arr::get($link, '@href');
+                $labelMime = $this->getLabelMime((string)Arr::get($link, '@media-type', $labelFormat));
             }
         }
 
@@ -386,8 +398,8 @@ class CanadaPost extends AbstractCarrier
             'rate' => $rate,
             'trackingNumber' => Arr::get($data, 'tracking-pin'),
             'labelId' => Arr::get($data, 'shipment-id'),
-            'labelData' => $this->_getLabelData($labelUrl),
-            'labelMime' => 'application/pdf',
+            'labelData' => $this->_getLabelData($labelUrl, $labelMime),
+            'labelMime' => $labelMime,
         ]);
 
         return new LabelResponse([
@@ -424,7 +436,7 @@ class CanadaPost extends AbstractCarrier
         };
     }
 
-    private function _getLabelData(string $url): string
+    private function _getLabelData(string $url, string $labelMime): string
     {
         return base64_encode((new HttpClient())
             ->request('GET', $url, [
@@ -432,8 +444,8 @@ class CanadaPost extends AbstractCarrier
                     $this->username, $this->password,
                 ],
                 'headers' => [
-                    'Content-Type' => 'application/pdf',
-                    'Accept' => 'application/pdf',
+                    'Content-Type' => $labelMime,
+                    'Accept' => $labelMime,
                 ],
             ])->getBody()->getContents());
     }

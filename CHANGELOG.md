@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- Add configurable label output formats for Australia Post, Canada Post, FedEx, UPS, and USPS.
+
+### Fixed
+- Return the correct label MIME type for non-default carrier formats and preserve multiline USPS label data.
+
 ## 1.2.24 - 2026-09-26
 
 ### Fixed

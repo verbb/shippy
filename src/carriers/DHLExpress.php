@@ -426,7 +426,7 @@ class DHLExpress extends AbstractCarrier
             'rate' => $rate,
             'trackingNumber' => Arr::get($data, 'shipmentTrackingNumber'),
             'labelData' => Arr::get($document, 'content', ''),
-            'labelMime' => $this->_getLabelMime($imageFormat),
+            'labelMime' => $this->getLabelMime($imageFormat),
         ]);
 
         return new LabelResponse([
@@ -463,18 +463,6 @@ class DHLExpress extends AbstractCarrier
 
     // Private Methods
     // =========================================================================
-
-    private function _getLabelMime(string $imageFormat): string
-    {
-        return match (strtolower($imageFormat)) {
-            'pdf' => 'application/pdf',
-            'gif' => 'image/gif',
-            'jpg', 'jpeg' => 'image/jpeg',
-            'png' => 'image/png',
-            'tif', 'tiff' => 'image/tiff',
-            default => 'application/octet-stream',
-        };
-    }
 
     private function _mapTrackingStatus(string $status): string
     {

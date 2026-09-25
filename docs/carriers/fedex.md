@@ -24,3 +24,15 @@ new FedEx([
     'accountNumber' => '••••••••••',
 ]);
 ```
+
+## Label Formats
+FedEx creates labels as PDFs by default. You can request another output type by passing `imageType` and a compatible `labelStockType` to the shipment's `getLabels()` method.
+
+```php
+$labelResponse = $shipment->getLabels($rate, [
+    'imageType' => 'ZPLII',
+    'labelStockType' => 'STOCK_4X6',
+]);
+```
+
+FedEx supports `PDF`, `PNG`, `ZPLII`, and `EPL2`. Available label stock types and format combinations can depend on the selected service.

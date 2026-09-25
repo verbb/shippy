@@ -439,6 +439,8 @@ class AustraliaPost extends AbstractCarrier
 
         // Fetch the labels for the shipment
         if ($shipmentIds) {
+            $labelFormat = (string)Arr::get($options, 'format', 'PDF');
+
             $types = [
                 'Parcel Post',
                 'Express Post',
@@ -448,7 +450,7 @@ class AustraliaPost extends AbstractCarrier
                 'wait_for_label_url' => true,
                 'preferences' => [
                     'type' => 'PRINT',
-                    'format' => 'PDF',
+                    'format' => $labelFormat,
                     'groups' => array_map(function($type) use ($options) {
                         return [
                             'group' => $type,
@@ -485,7 +487,7 @@ class AustraliaPost extends AbstractCarrier
                     'trackingNumber' => $trackingNumber,
                     'labelId' => Arr::get($label, 'request_id'),
                     'labelData' => $this->_getLabelData(Arr::get($label, 'url')),
-                    'labelMime' => 'application/pdf',
+                    'labelMime' => $this->getLabelMime($labelFormat),
                 ]);
             }
         }

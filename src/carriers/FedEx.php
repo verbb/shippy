@@ -337,13 +337,16 @@ class FedEx extends AbstractCarrier
         $labels = [];
 
         foreach (Arr::get($data, 'output.transactionShipments', []) as $shipmentObject) {
+            $document = Arr::get($shipmentObject, 'pieceResponses.0.packageDocuments.0', []);
+            $labelFormat = (string)Arr::get($document, 'docType', Arr::get($options, 'imageType', 'PDF'));
+
             $labels[] = new Label([
                 'carrier' => $this,
                 'response' => $shipmentObject,
                 'rate' => $rate,
                 'trackingNumber' => Arr::get($shipmentObject, 'masterTrackingNumber'),
-                'labelData' => Arr::get($shipmentObject, 'pieceResponses.0.packageDocuments.0.encodedLabel', ''),
-                'labelMime' => 'application/pdf',
+                'labelData' => Arr::get($document, 'encodedLabel', ''),
+                'labelMime' => $this->getLabelMime($labelFormat),
             ]);
         }
 

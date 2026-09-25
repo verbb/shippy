@@ -209,6 +209,25 @@ abstract class AbstractCarrier extends Model implements CarrierInterface
     // Protected Methods
     // =========================================================================
 
+    protected function getLabelMime(string $format): string
+    {
+        $format = strtolower(trim(explode(';', $format, 2)[0]));
+
+        if (str_contains($format, '/')) {
+            return $format;
+        }
+
+        return match ($format) {
+            'pdf' => 'application/pdf',
+            'gif' => 'image/gif',
+            'jpg', 'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'svg' => 'image/svg+xml',
+            'tif', 'tiff' => 'image/tiff',
+            default => 'application/octet-stream',
+        };
+    }
+
     protected function fetchRates(Request $request, callable $callback): array
     {
         try {

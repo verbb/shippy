@@ -490,6 +490,12 @@ class UPS extends AbstractCarrier
         $labels = [];
 
         if ($shipmentId) {
+            $labelFormat = (string)Arr::get(
+                $data,
+                'ShipmentResponse.ShipmentResults.PackageResults.ShippingLabel.ImageFormat.Code',
+                Arr::get($payload, 'ShipmentRequest.LabelSpecification.LabelImageFormat.Code', 'GIF')
+            );
+
             $labels[] = new Label([
                 'carrier' => $this,
                 'response' => $data,
@@ -497,7 +503,7 @@ class UPS extends AbstractCarrier
                 'trackingNumber' => Arr::get($data, 'ShipmentResponse.ShipmentResults.PackageResults.TrackingNumber', ''),
                 'labelId' => $shipmentId,
                 'labelData' => Arr::get($data, 'ShipmentResponse.ShipmentResults.PackageResults.ShippingLabel.GraphicImage', ''),
-                'labelMime' => 'image/gif',
+                'labelMime' => $this->getLabelMime($labelFormat),
             ]);
         }
 

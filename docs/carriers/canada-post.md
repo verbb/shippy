@@ -29,3 +29,15 @@ new Canada Post([
     'contractId' => '•••••••••••••••••••••••••••••••••••',
 ]);
 ```
+
+## Label Formats
+Canada Post creates labels as PDFs by default. You can request ZPL II output by passing its print preferences to the shipment's `getLabels()` method.
+
+```php
+$labelResponse = $shipment->getLabels($rate, [
+    'encoding' => 'ZPL',
+    'outputFormat' => '4x6',
+]);
+```
+
+Canada Post supports `PDF` and `ZPL` encodings, with `8.5x11` and `4x6` output formats. ZPL requires the `4x6` output format, which Shippy selects automatically if `outputFormat` is omitted.

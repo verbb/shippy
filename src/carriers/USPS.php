@@ -386,6 +386,7 @@ class USPS extends AbstractCarrier
         $this->validate('clientId', 'clientSecret', 'accountNumber', 'customerRegistrationId', 'mailerId');
 
         $shipDate = (new DateTime())->modify('+1 day')->format('Y-m-d');
+        $labelFormat = (string)Arr::get($options, 'labelFormat', 'PDF');
 
         // The service code will contain `mailClass`, `rateIndicator` and `processingCategory` but provide fallbacks
         $serviceCode = explode('__', $rate->getServiceCode());
@@ -395,7 +396,7 @@ class USPS extends AbstractCarrier
 
         $payload = [
             'imageInfo' => [
-                'imageType' => Arr::get($options, 'labelFormat', 'PDF'),
+                'imageType' => $labelFormat,
                 'labelType' => Arr::get($options, 'labelType', '4X6LABEL'),
                 'shipInfo' => true,
                 'receiptOption' => 'NONE',
@@ -489,17 +490,19 @@ class USPS extends AbstractCarrier
         $data = $this->fetchLabels($request, function(Response $response) {
             $responseData = [];
             $contentType = $response->getResponse()->getHeader('Content-Type')[0] ?? null;
-            $boundary = str_replace('multipart/mixed; boundary=', '', $contentType);
+            preg_match('/boundary="?([^";]+)"?/', (string)$contentType, $matches);
+            $boundary = $matches[1] ?? '';
 
             $multipart = $this->_parseMultipartResponse($response->getContent(), $boundary);
 
             foreach ($multipart as $multi) {
-                if (Arr::get($multi, 'headers.Content-Type') === 'application/pdf') {
-                    $responseData['label'] = Arr::get($multi, 'content');
-                }
+                $partContentType = (string)Arr::get($multi, 'headers.content-type');
 
-                if (Arr::get($multi, 'headers.Content-type') === 'application/json') {
+                if (str_starts_with(strtolower($partContentType), 'application/json')) {
                     $responseData['data'] = Json::decode(Arr::get($multi, 'content'));
+                } else if (Arr::has($multi, 'content')) {
+                    $responseData['label'] = Arr::get($multi, 'content');
+                    $responseData['labelMime'] = $partContentType;
                 }
             }
 
@@ -515,7 +518,7 @@ class USPS extends AbstractCarrier
             'trackingNumber' => Arr::get($data, 'data.trackingNumber'),
             'labelId' => Arr::get($data, 'data.SKU'),
             'labelData' => Arr::get($data, 'label'),
-            'labelMime' => 'application/pdf',
+            'labelMime' => $this->getLabelMime((string)Arr::get($data, 'labelMime', $labelFormat)),
         ]);
 
         return new LabelResponse([
@@ -585,34 +588,40 @@ class USPS extends AbstractCarrier
     {
         $parsed = [];
 
-        $bodies = explode('--' . $boundary, $data);
-
-        foreach ($bodies as $j => $body) {
-            $isHeader = true;
-
-            foreach (explode(PHP_EOL, $body) as $i => $line) {
-                if ($i === 0) {
-                    continue;
-                }
-
-                if (trim($line) === '') {
-                    $isHeader = false;
-
-                    continue;
-                }
-
-                if ($isHeader) {
-                    [$header, $value] = explode(':', $line);
-
-                    if ($header) {
-                        $parsed[$j]['headers'][$header] = trim($value);
-                    }
-                } else {
-                    $parsed[$j]['content'] = $line;
-                }
-            }
+        if (!$boundary) {
+            return $parsed;
         }
 
-        return array_values($parsed);
+        foreach (explode('--' . $boundary, $data) as $body) {
+            $body = ltrim($body, "\r\n");
+
+            if (!$body || str_starts_with($body, '--')) {
+                continue;
+            }
+
+            $parts = preg_split('/\r?\n\r?\n/', $body, 2);
+
+            if (count($parts) !== 2) {
+                continue;
+            }
+
+            [$headerBlock, $content] = $parts;
+            $part = [
+                'headers' => [],
+                'content' => preg_replace('/\r?\n$/', '', $content),
+            ];
+
+            foreach (preg_split('/\r?\n/', $headerBlock) as $line) {
+                $header = explode(':', $line, 2);
+
+                if (count($header) === 2) {
+                    $part['headers'][strtolower(trim($header[0]))] = trim($header[1]);
+                }
+            }
+
+            $parsed[] = $part;
+        }
+
+        return $parsed;
     }
 }
