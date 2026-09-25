@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.2.24 - 2026-09-26
 
 ### Fixed
 - Fix DHL Express label responses reporting non-PDF label formats as PDFs, and document how to request them ([#22](https://github.com/verbb/shippy/issues/22)).
