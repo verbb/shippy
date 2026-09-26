@@ -26,3 +26,14 @@ new NewZealandPost([
     'clientSecret' => '•••••••••••••••••••••••••••••••••••',
 ]);
 ```
+
+## Label Formats
+New Zealand Post creates labels as PDFs by default. You can request PNG output by passing the provider's `format` option to the shipment's `getLabels()` method.
+
+```php
+$labelResponse = $shipment->getLabels($rate, [
+    'format' => 'PNG',
+]);
+```
+
+New Zealand Post supports `PDF` and `PNG` formats.

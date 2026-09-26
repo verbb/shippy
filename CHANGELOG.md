@@ -3,7 +3,8 @@
 ## Unreleased
 
 ### Added
-- Add configurable label output formats for Australia Post, Canada Post, FedEx, UPS, and USPS.
+- Add configurable label output formats for Australia Post, Canada Post, FedEx, New Zealand Post, UPS, and USPS.
+- Add support for selecting cropped or full-page Sendle labels.
 
 ### Fixed
 - Return the correct label MIME type for non-default carrier formats and preserve multiline USPS label data.

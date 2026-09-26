@@ -23,18 +23,6 @@ new AustraliaPost([
 ]);
 ```
 
-## Label Formats
-Australia Post creates labels as PDFs by default. You can request ZPL output by passing the provider's `format` option to the shipment's `getLabels()` method.
-
-```php
-$labelResponse = $shipment->getLabels($rate, [
-    'format' => 'ZPL',
-    'layoutType' => 'A6-1pp',
-]);
-```
-
-Australia Post supports `PDF` and `ZPL`. ZPL label requests are limited to 50 labels per request.
-
 ### Shipping and Tracking (All)
 A more involved API that handles all features. You will be required to have an Australia Post account.
 
@@ -54,3 +42,14 @@ new AustraliaPost([
     'accountNumber' => '•••••••••',
 ]);
 ```
+
+## Label Formats
+Australia Post creates labels as PDFs by default. You can request ZPL output by passing the provider's `format` option to the shipment's `getLabels()` method.
+
+```php
+$labelResponse = $shipment->getLabels($rate, [
+    'format' => 'ZPL',
+]);
+```
+
+Australia Post supports `PDF` and `ZPL`. ZPL label requests are limited to 50 labels per request.

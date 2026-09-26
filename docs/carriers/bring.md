@@ -28,3 +28,6 @@ new Bring([
     'customerNumber' => '••••••••••',
 ]);
 ```
+
+## Label Formats
+Bring normally creates PDF labels and does not provide a general format selector. Tracked Mailbox Parcel (`3570`) shipments use ZPL automatically because the printer commands also program the RFID label. Shippy reports the format returned by Bring for either case.

@@ -240,10 +240,12 @@ class NewZealandPost extends AbstractCarrier
     public function getLabels(Shipment $shipment, Rate $rate, array $options = []): ?LabelResponse
     {
         $this->validate('clientId', 'clientSecret', 'accountNumber');
+        $labelFormat = strtoupper((string)Arr::get($options, 'format', 'PDF'));
 
         if (self::isDomestic($shipment->getTo()->getCountryCode())) {
             $payload = [
                 'carrier' => 'COURIERPOST',
+                'format' => $labelFormat,
                 'account_number' => $this->accountNumber,
                 'sender_details' => [
                     'name' => $shipment->getFrom()->getFullName(),
@@ -286,6 +288,7 @@ class NewZealandPost extends AbstractCarrier
         } else {
             $payload = [
                 'carrier' => 'PARCELPOST',
+                'format' => $labelFormat,
                 'sender_details' => [
                     'name' => $shipment->getFrom()->getFullName(),
                     'phone' => $shipment->getFrom()->getPhone(),
@@ -377,17 +380,23 @@ class NewZealandPost extends AbstractCarrier
                 return $response->json();
             });
 
-            foreach (Arr::get($data, 'labels', []) as $label) {
+            foreach (Arr::get($data, 'labels', []) as $index => $label) {
                 $errors = Arr::get($label, 'errors');
 
                 if (!$errors) {
+                    $labelUrl = Arr::get($data, 'consignment_url', '');
+
+                    if ($labelFormat === 'PNG') {
+                        $labelUrl = Arr::get($data, "page_urls.$index", $labelUrl);
+                    }
+
                     $labels[] = new Label([
                         'carrier' => $this,
                         'response' => $data,
                         'rate' => $rate,
                         'trackingNumber' => Arr::get($label, 'tracking_reference'),
-                        'labelData' => $this->_getLabelData(Arr::get($data, 'consignment_url', '')),
-                        'labelMime' => 'application/pdf',
+                        'labelData' => $this->_getLabelData($labelUrl),
+                        'labelMime' => $this->getLabelMime($labelFormat),
                     ]);
                 }
             }

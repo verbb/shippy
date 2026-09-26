@@ -375,13 +375,15 @@ class Bring extends AbstractCarrier
             $errors = Arr::get($consignment, 'errors');
 
             if (!$errors) {
+                $labelFile = $this->_getLabelFile(Arr::get($consignment, 'confirmation.links.labels', ''));
+
                 $labels[] = new Label([
                     'carrier' => $this,
                     'response' => $consignment,
                     'rate' => $rate,
                     'trackingNumber' => Arr::get($consignment, 'confirmation.consignmentNumber'),
-                    'labelData' => $this->_getLabelData(Arr::get($consignment, 'confirmation.links.labels', '')),
-                    'labelMime' => 'application/pdf',
+                    'labelData' => Arr::get($labelFile, 'data', ''),
+                    'labelMime' => Arr::get($labelFile, 'mime', 'application/pdf'),
                 ]);
             }
         }
@@ -422,8 +424,19 @@ class Bring extends AbstractCarrier
         };
     }
 
-    private function _getLabelData(string $url): string
+    private function _getLabelFile(string $url): array
     {
-        return base64_encode((new HttpClient())->request('GET', $url)->getBody()->getContents());
+        $response = (new HttpClient())->request('GET', $url);
+        $content = $response->getBody()->getContents();
+        $contentType = $response->getHeaderLine('Content-Type');
+
+        if (!$contentType && str_starts_with(ltrim($content), '^XA')) {
+            $contentType = 'application/octet-stream';
+        }
+
+        return [
+            'data' => base64_encode($content),
+            'mime' => $this->getLabelMime($contentType ?: 'PDF'),
+        ];
     }
 }

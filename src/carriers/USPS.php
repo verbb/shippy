@@ -502,7 +502,10 @@ class USPS extends AbstractCarrier
                     $responseData['data'] = Json::decode(Arr::get($multi, 'content'));
                 } else if (Arr::has($multi, 'content')) {
                     $responseData['label'] = Arr::get($multi, 'content');
-                    $responseData['labelMime'] = $partContentType;
+
+                    if ($partContentType) {
+                        $responseData['labelMime'] = $partContentType;
+                    }
                 }
             }
 

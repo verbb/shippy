@@ -232,6 +232,15 @@ class Sendle extends AbstractCarrier
         });
 
         $labels = [];
+        $labelFile = Arr::get($data, 'labels.0', []);
+        $labelSize = strtolower((string)Arr::get($options, 'labelSize'));
+
+        foreach (Arr::get($data, 'labels', []) as $responseLabel) {
+            if (!$labelSize || strtolower((string)Arr::get($responseLabel, 'size')) === $labelSize) {
+                $labelFile = $responseLabel;
+                break;
+            }
+        }
 
         $labels[] = new Label([
             'carrier' => $this,
@@ -239,8 +248,8 @@ class Sendle extends AbstractCarrier
             'rate' => $rate,
             'trackingNumber' => Arr::get($data, 'sendle_reference'),
             'labelId' => Arr::get($data, 'order_id'),
-            'labelData' => $this->_getLabelData(Arr::get($data, 'labels.0.url')),
-            'labelMime' => 'application/pdf',
+            'labelData' => $this->_getLabelData(Arr::get($labelFile, 'url')),
+            'labelMime' => $this->getLabelMime((string)Arr::get($labelFile, 'format', 'PDF')),
         ]);
 
         return new LabelResponse([

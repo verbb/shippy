@@ -23,3 +23,14 @@ new Sendle([
     'apiKey' => '•••••••••••••••••••••••••••••••••••',
 ]);
 ```
+
+## Label Formats
+Sendle provides PDF labels in cropped and full-page sizes. You can select a label from the order response by passing `labelSize` to the shipment's `getLabels()` method.
+
+```php
+$labelResponse = $shipment->getLabels($rate, [
+    'labelSize' => 'cropped',
+]);
+```
+
+The full-page size is `a4` for Australian orders and `letter` for Canadian and United States orders.
