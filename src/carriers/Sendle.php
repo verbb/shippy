@@ -35,6 +35,11 @@ class Sendle extends AbstractCarrier
         return 'cm';
     }
 
+    public static function getSupportedLabelFormats(): array
+    {
+        return [Label::FORMAT_PDF];
+    }
+
     public static function isDomestic(string $countryCode): bool
     {
         return $countryCode === 'AU';
@@ -185,6 +190,7 @@ class Sendle extends AbstractCarrier
     public function getLabels(Shipment $shipment, Rate $rate, array $options = []): ?LabelResponse
     {
         $this->validate('apiKey', 'sendleId');
+        $options = $this->resolveLabelOptions($options);
 
         $payload = [
             'sender' => [
@@ -270,6 +276,17 @@ class Sendle extends AbstractCarrier
             'base_uri' => $url,
             'auth' => [$this->sendleId, $this->apiKey],
         ]);
+    }
+
+
+    // Protected Methods
+    // =========================================================================
+
+    protected function getLabelFormatOptions(string $format, array $labelOptions): array
+    {
+        $size = Arr::get($labelOptions, 'size');
+
+        return $size ? ['labelSize' => $size] : [];
     }
 
 

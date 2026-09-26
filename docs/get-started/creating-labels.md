@@ -63,7 +63,7 @@ $rateResponse = $shipment->getRates();
 $rate = $rateResponse->getRates()[0] ?? null;
 
 if ($rate) {
-    // Crate the labels for the rate
+    // Create the labels for the rate
     $labelResponse = $shipment->getLabels($rate);
 
     echo '<pre>';
@@ -71,6 +71,66 @@ if ($rate) {
     echo '</pre>';
 }
 ```
+
+## Choosing a Label Format
+
+Use the carrier-independent `format` option when you need a particular output format. Format names are case-insensitive, and aliases such as `zplii`, `epl`, `jpeg`, and `tif` are normalised automatically.
+
+```php
+use verbb\shippy\models\Label;
+
+$labelResponse = $shipment->getLabels($rate, [
+    'format' => Label::FORMAT_ZPL,
+    'resolution' => 203,
+]);
+```
+
+Set the same options on the shipment when every label request should use them. An option passed directly to `getLabels()` overrides the corresponding shipment default.
+
+```php
+$shipment->setLabelOptions([
+    'format' => Label::FORMAT_ZPL,
+    'resolution' => 203,
+]);
+
+$labelResponse = $shipment->getLabels($rate);
+```
+
+Each carrier advertises the formats it can request from its API:
+
+```php
+$carrier = $rate->getCarrier();
+$supportedFormats = $carrier::getSupportedLabelFormats();
+```
+
+The request options are resolved in this order, from highest to lowest precedence:
+
+1. Carrier-specific options passed to `getLabels()`.
+1. Carrier-independent options passed to `getLabels()`.
+1. Carrier-independent options set with `Shipment::setLabelOptions()`.
+1. The carrier's default format.
+
+Carrier-specific options remain available for provider features that do not have a carrier-independent equivalent. If the selected carrier cannot request the generic format, `Shipment::getLabels()` returns the explanation in the [LabelResponse](docs:models/label-response) `errors` array instead of silently returning a different format. Direct calls to a carrier's `getLabels()` method throw an `UnsupportedLabelFormatException`.
+
+The currently requestable formats are:
+
+| Carrier | Formats |
+| --- | --- |
+| Aramex Australia | `pdf` |
+| Aramex New Zealand | `pdf` |
+| Australia Post | `pdf`, `zpl` |
+| Bring | `pdf` |
+| Canada Post | `pdf`, `zpl` |
+| DHL Express | `pdf`, `zpl`, `lp2`, `epl2` |
+| FedEx and FedEx Freight | `pdf`, `png`, `zpl`, `epl2` |
+| New Zealand Post | `pdf`, `png` |
+| Royal Mail | `pdf` |
+| Sendle | `pdf` |
+| UPS | `gif`, `zpl`, `epl2`, `spl` |
+| UPS Freight | `gif` |
+| USPS | `pdf`, `tiff`, `jpg`, `svg`, `zpl` |
+
+Bring may return printer-command data for some products automatically, but its API does not expose a request option for selecting that output. For that reason, only PDF is advertised as requestable.
 
 The above will return a [LabelResponse](docs:models/label-response) model, which will look similar to the following:
 

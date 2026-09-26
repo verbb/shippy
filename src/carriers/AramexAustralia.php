@@ -36,6 +36,11 @@ class AramexAustralia extends AbstractCarrier
     {
         return 'cm';
     }
+
+    public static function getSupportedLabelFormats(): array
+    {
+        return [Label::FORMAT_PDF];
+    }
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
@@ -159,6 +164,8 @@ class AramexAustralia extends AbstractCarrier
 
     public function getLabels(Shipment $shipment, Rate $rate, array $options = []): ?LabelResponse
     {
+        $options = $this->resolveLabelOptions($options);
+
         $payload = [
             'To' => $this->getContact($shipment->getTo()),
             'Items' => $this->getPackages($shipment),

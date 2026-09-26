@@ -272,13 +272,13 @@ With that `Request`, we call `fetchTracking()` and in a callback, we receive a `
 We can defensively loop through some returned data, creating [Tracking](docs:models/tracking) models to be returned as a [TrackingResponse](docs:models/tracking-response). We cover mapping the status from the provider into well-defined Shippy statuses in `_mapTrackingStatus()`, and also handle creating any [TrackingDetail](docs:models/tracking-detail) models.
 
 ### Creating Labels
-In order to fetch rates, we'll do the following:
+In order to create labels, we'll do the following:
 
 1. Validate that we've supplied at least the `apiKey` for the carrier
 1. Take the details of a [Shipment](docs:models/shipment) model and a [Rate](docs:models/rate) model
 1. Turn it into a [Request](docs:models/request)
 1. Call `fetchLabels()`, parsing the raw response
-1. From the carrier API reponse, create multiple [Label](docs:models/label) models
+1. From the carrier API response, create multiple [Label](docs:models/label) models
 1. Return a [LabelResponse](docs:models/label-response) model
 
 ```php
@@ -290,9 +290,15 @@ use verbb\shippy\models\LabelResponse;
 use verbb\shippy\models\Rate;
 use verbb\shippy\models\Shipment;
 
+public static function getSupportedLabelFormats(): array
+{
+    return [Label::FORMAT_PDF, Label::FORMAT_ZPL];
+}
+
 public function getLabels(Shipment $shipment, Rate $rate, array $options = []): ?LabelResponse
 {
     $this->validate('apiKey');
+    $options = $this->resolveLabelOptions($options);
 
     $payload = [
         'from' => [
@@ -310,6 +316,7 @@ public function getLabels(Shipment $shipment, Rate $rate, array $options = []): 
             'country' => $shipment->getTo()->getCountryCode(),
         ],
         'serviceCode' => $rate->getServiceCode(),
+        'labelFormat' => $options['labelFormat'] ?? 'PDF',
         'items' => array_map(function($package) {
             return [
                 'length' => $package->getLength(),
@@ -350,6 +357,16 @@ public function getLabels(Shipment $shipment, Rate $rate, array $options = []): 
         'labels' => $labels,
     ]);
 }
+
+protected function getLabelFormatOptions(string $format, array $labelOptions): array
+{
+    return ['labelFormat' => strtoupper($format)];
+}
+
+protected function getLabelFormatOptionPaths(): array
+{
+    return ['labelFormat'];
+}
 ```
 
 Let's step through this code. We call `$this->validate('apiKey');` to ensure that an exception is raised if attempting to run this without a valid `apiKey`. This will just test if the value is set, not the actual validity of it.
@@ -358,9 +375,11 @@ Next is creating a [Request](docs:models/request) model, which represents the HT
 
 With that `Request`, we call `fetchLabels()` and in a callback, we receive a `Response` model containing the raw response from the carrier API. It's the job of this callback to parse the string response from the API into an array. We happen to know `Wakanda Post` fortunately uses JSON, so we can call `$response->json()` as a shortcut for `Json::decode($response->getContent())`. Now our `$data` variable is an array of whatever was sent back from the API.
 
-We can defensively loop through some returned data, creating [Label](docs:models/label) models to be returned as a [LabelResponse](docs:models/label-response). 
+We can defensively loop through some returned data, creating [Label](docs:models/label) models to be returned as a [LabelResponse](docs:models/label-response).
 
-Depending on the API, you may need to handle serializing the label itself into `labelData`. For example, the API might response with the label as a content. You could handle this in the parsing logic for a response.
+The `getSupportedLabelFormats()` method advertises the formats the provider API can request. Calling `resolveLabelOptions()` validates a carrier-independent format and passes it to `getLabelFormatOptions()`, where you map it to the provider's request fields. The options returned by that method are merged beneath any carrier-specific options supplied by the caller. Return the provider's native format field from `getLabelFormatOptionPaths()` so an explicit value can take precedence over the carrier-independent selection.
+
+Depending on the API, you may need to handle serializing the label itself into `labelData`. For example, the API might respond with the label as content. You could handle this in the parsing logic for a response.
 
 ```php
 $labelData = $this->fetchLabels($request, function(Response $response) {

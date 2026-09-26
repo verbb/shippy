@@ -5,6 +5,21 @@ use verbb\shippy\carriers\CarrierInterface;
 
 class Label extends Model
 {
+    // Constants
+    // =========================================================================
+
+    public const FORMAT_EPL2 = 'epl2';
+    public const FORMAT_GIF = 'gif';
+    public const FORMAT_JPG = 'jpg';
+    public const FORMAT_LP2 = 'lp2';
+    public const FORMAT_PDF = 'pdf';
+    public const FORMAT_PNG = 'png';
+    public const FORMAT_SPL = 'spl';
+    public const FORMAT_SVG = 'svg';
+    public const FORMAT_TIFF = 'tiff';
+    public const FORMAT_ZPL = 'zpl';
+
+
     // Properties
     // =========================================================================
 

@@ -1,8 +1,8 @@
 <?php
 namespace verbb\shippy\models;
 
-use verbb\shippy\carriers\CarrierInterface;
 use verbb\shippy\Shippy;
+use verbb\shippy\carriers\CarrierInterface;
 
 use Throwable;
 
@@ -16,6 +16,7 @@ class Shipment extends Model
     protected ?string $currency = null;
     protected array $packages = [];
     protected array $carriers = [];
+    protected array $labelOptions = [];
 
 
     // Public Methods
@@ -85,6 +86,17 @@ class Shipment extends Model
     public function addCarrier(CarrierInterface $carrier): Shipment
     {
         $this->carriers[] = $carrier;
+        return $this;
+    }
+
+    public function getLabelOptions(): array
+    {
+        return $this->labelOptions;
+    }
+
+    public function setLabelOptions(array $labelOptions): Shipment
+    {
+        $this->labelOptions = $labelOptions;
         return $this;
     }
 
@@ -170,6 +182,9 @@ class Shipment extends Model
         $carrier = $rate->getCarrier();
 
         try {
+            // Per-call label options override the defaults stored on the shipment.
+            $options = array_replace_recursive($shipment->getLabelOptions(), $options);
+
             // Convert each package to the units defined by the carrier
             $shipment->getPackagesForCarrier($carrier);
 

@@ -15,3 +15,4 @@ Properties are `protected` and can be accessed with their `getPropertyName()` ge
 | `currency`        | `string`          | The currency the shipment should be using.
 | `packages`        | `array`           | A collection of [Package](docs:models/package) models for the shipment.
 | `carriers`        | `array`           | A collection of Carriers to fetch rates for.
+| `labelOptions`    | `array`           | Carrier-independent defaults such as label `format`, `resolution`, and `size`.

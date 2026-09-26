@@ -36,6 +36,11 @@ class Bring extends AbstractCarrier
     {
         return 'cm';
     }
+
+    public static function getSupportedLabelFormats(): array
+    {
+        return [Label::FORMAT_PDF];
+    }
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
@@ -303,6 +308,7 @@ class Bring extends AbstractCarrier
     public function getLabels(Shipment $shipment, Rate $rate, array $options = []): ?LabelResponse
     {
         $this->validate('username', 'apiKey', 'customerNumber');
+        $options = $this->resolveLabelOptions($options);
 
         $shipDate = (new DateTime())->modify('+1 day')->format('c');
 

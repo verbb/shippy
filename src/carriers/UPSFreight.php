@@ -29,6 +29,11 @@ class UPSFreight extends UPS
         return 'UPS Freight';
     }
 
+    public static function getSupportedLabelFormats(): array
+    {
+        return [Label::FORMAT_GIF];
+    }
+
 
     // Properties
     // =========================================================================
@@ -163,6 +168,7 @@ class UPSFreight extends UPS
     public function getLabels(Shipment $shipment, Rate $rate, array $options = []): ?LabelResponse
     {
         $this->validate('clientId', 'clientSecret', 'accountNumber', 'freightClass', 'freightService', 'freightPackingType');
+        $options = $this->resolveLabelOptions($options);
 
         $payload = [
             'FreightShipRequest' => [
@@ -232,6 +238,10 @@ class UPSFreight extends UPS
         ]);
     }
 
+
+    // Protected Methods
+    // =========================================================================
+
     protected function getPackages(Shipment $shipment): array
     {
         return array_map(function($key, Package $package) use ($shipment) {
@@ -259,6 +269,12 @@ class UPSFreight extends UPS
             ];
         }, array_keys($shipment->getPackages()), $shipment->getPackages());
     }
+
+    protected function getLabelFormatOptionPaths(): array
+    {
+        return [];
+    }
+
 
     // Private Methods
     // =========================================================================

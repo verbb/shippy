@@ -28,11 +28,11 @@ new NewZealandPost([
 ```
 
 ## Label Formats
-New Zealand Post creates labels as PDFs by default. You can request PNG output by passing the provider's `format` option to the shipment's `getLabels()` method.
+New Zealand Post creates labels as PDFs by default. You can request PNG output with the carrier-independent label options.
 
 ```php
 $labelResponse = $shipment->getLabels($rate, [
-    'format' => 'PNG',
+    'format' => 'png',
 ]);
 ```
 

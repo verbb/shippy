@@ -31,12 +31,11 @@ new Canada Post([
 ```
 
 ## Label Formats
-Canada Post creates labels as PDFs by default. You can request ZPL II output by passing its print preferences to the shipment's `getLabels()` method.
+Canada Post creates labels as PDFs by default. You can request ZPL II output with the carrier-independent label options.
 
 ```php
 $labelResponse = $shipment->getLabels($rate, [
-    'encoding' => 'ZPL',
-    'outputFormat' => '4x6',
+    'format' => 'zpl',
 ]);
 ```
 

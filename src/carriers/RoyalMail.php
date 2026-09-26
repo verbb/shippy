@@ -36,6 +36,11 @@ class RoyalMail extends AbstractCarrier
     {
         return 'mm';
     }
+
+    public static function getSupportedLabelFormats(): array
+    {
+        return [Label::FORMAT_PDF];
+    }
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
@@ -255,6 +260,8 @@ class RoyalMail extends AbstractCarrier
      */
     public function getLabels(Shipment $shipment, Rate $rate, array $options = []): ?LabelResponse
     {
+        $options = $this->resolveLabelOptions($options);
+
         if ($this->useClickAndDropLabels) {
             $this->validate('clickAndDropApiKey');
 

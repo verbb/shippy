@@ -37,6 +37,11 @@ class NewZealandPost extends AbstractCarrier
         return 'cm';
     }
 
+    public static function getSupportedLabelFormats(): array
+    {
+        return [Label::FORMAT_PDF, Label::FORMAT_PNG];
+    }
+
     public static function isDomestic(string $countryCode): bool
     {
         return $countryCode === 'NZ';
@@ -240,6 +245,7 @@ class NewZealandPost extends AbstractCarrier
     public function getLabels(Shipment $shipment, Rate $rate, array $options = []): ?LabelResponse
     {
         $this->validate('clientId', 'clientSecret', 'accountNumber');
+        $options = $this->resolveLabelOptions($options);
         $labelFormat = strtoupper((string)Arr::get($options, 'format', 'PDF'));
 
         if (self::isDomestic($shipment->getTo()->getCountryCode())) {
@@ -457,6 +463,10 @@ class NewZealandPost extends AbstractCarrier
         return $accessToken;
     }
 
+    protected function getLabelFormatOptions(string $format, array $labelOptions): array
+    {
+        return ['format' => strtoupper($format)];
+    }
 
     // Private Methods
     // =========================================================================

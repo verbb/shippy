@@ -31,14 +31,12 @@ new DHLExpress([
 ```
 
 ## Label Formats
-DHL Express creates labels as PDFs by default. You can request a thermal printer format by passing `outputImageProperties.encodingFormat` to the shipment's `getLabels()` method. DHL supports `pdf`, `zpl`, `lp2`, and `epl` values.
+DHL Express creates labels as PDFs by default. You can request a thermal printer format with the carrier-independent label options.
 
 ```php
 $labelResponse = $shipment->getLabels($rate, [
-    'outputImageProperties' => [
-        'encodingFormat' => 'zpl',
-    ],
+    'format' => 'zpl',
 ]);
 ```
 
-The label's `labelData` value contains DHL's base64-encoded output. Thermal printer formats use the `application/octet-stream` MIME type because ZPL, LP2, and EPL don't have registered media types. Invoices and shipment receipts are always returned as PDFs.
+DHL supports `pdf`, `zpl`, `lp2`, and `epl2`; `epl` is accepted as an alias. The label's `labelData` value contains DHL's base64-encoded output. Thermal printer formats use the `application/octet-stream` MIME type because ZPL, LP2, and EPL don't have registered media types. Invoices and shipment receipts are always returned as PDFs.

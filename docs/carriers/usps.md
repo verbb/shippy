@@ -31,11 +31,12 @@ new USPS([
 ```
 
 ## Label Formats
-USPS creates labels as PDFs by default. You can request another output type by passing `labelFormat` to the shipment's `getLabels()` method.
+USPS creates labels as PDFs by default. You can request another output type with the carrier-independent label options. Set `resolution` to `203` or `300` for ZPL output.
 
 ```php
 $labelResponse = $shipment->getLabels($rate, [
-    'labelFormat' => 'ZPL203DPI',
+    'format' => 'zpl',
+    'resolution' => 203,
     'labelType' => '4X6LABEL',
 ]);
 ```

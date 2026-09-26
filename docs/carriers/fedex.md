@@ -26,12 +26,11 @@ new FedEx([
 ```
 
 ## Label Formats
-FedEx creates labels as PDFs by default. You can request another output type by passing `imageType` and a compatible `labelStockType` to the shipment's `getLabels()` method.
+FedEx creates labels as PDFs by default. You can request another output type with the carrier-independent label options. Shippy selects a 4 × 6 stock type for thermal formats automatically.
 
 ```php
 $labelResponse = $shipment->getLabels($rate, [
-    'imageType' => 'ZPLII',
-    'labelStockType' => 'STOCK_4X6',
+    'format' => 'zpl',
 ]);
 ```
 

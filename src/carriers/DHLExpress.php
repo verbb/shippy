@@ -36,6 +36,11 @@ class DHLExpress extends AbstractCarrier
     {
         return 'cm';
     }
+
+    public static function getSupportedLabelFormats(): array
+    {
+        return [Label::FORMAT_PDF, Label::FORMAT_ZPL, Label::FORMAT_LP2, Label::FORMAT_EPL2];
+    }
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
@@ -307,6 +312,7 @@ class DHLExpress extends AbstractCarrier
     public function getLabels(Shipment $shipment, Rate $rate, array $options = []): ?LabelResponse
     {
         $this->validate('username', 'password', 'accountNumber');
+        $options = $this->resolveLabelOptions($options);
 
         $payload = array_replace_recursive([
             'customerDetails' => [
@@ -458,6 +464,28 @@ class DHLExpress extends AbstractCarrier
                 'Accept' => 'application/json',
             ],
         ]);
+    }
+
+
+    // Protected Methods
+    // =========================================================================
+
+    protected function getLabelFormatOptions(string $format, array $labelOptions): array
+    {
+        if ($format === Label::FORMAT_EPL2) {
+            $format = 'epl';
+        }
+
+        return [
+            'outputImageProperties' => [
+                'encodingFormat' => $format,
+            ],
+        ];
+    }
+
+    protected function getLabelFormatOptionPaths(): array
+    {
+        return ['outputImageProperties.encodingFormat'];
     }
 
 

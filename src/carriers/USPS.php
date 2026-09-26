@@ -36,6 +36,17 @@ class USPS extends AbstractCarrier
     {
         return 'in';
     }
+
+    public static function getSupportedLabelFormats(): array
+    {
+        return [
+            Label::FORMAT_PDF,
+            Label::FORMAT_TIFF,
+            Label::FORMAT_JPG,
+            Label::FORMAT_SVG,
+            Label::FORMAT_ZPL,
+        ];
+    }
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
@@ -384,6 +395,7 @@ class USPS extends AbstractCarrier
     public function getLabels(Shipment $shipment, Rate $rate, array $options = []): ?LabelResponse
     {
         $this->validate('clientId', 'clientSecret', 'accountNumber', 'customerRegistrationId', 'mailerId');
+        $options = $this->resolveLabelOptions($options);
 
         $shipDate = (new DateTime())->modify('+1 day')->format('Y-m-d');
         $labelFormat = (string)Arr::get($options, 'labelFormat', 'PDF');
@@ -572,6 +584,30 @@ class USPS extends AbstractCarrier
         }
 
         return $accessToken;
+    }
+
+
+    // Protected Methods
+    // =========================================================================
+
+    protected function getLabelFormatOptions(string $format, array $labelOptions): array
+    {
+        if ($format === Label::FORMAT_ZPL) {
+            $resolution = (int)Arr::get($labelOptions, 'resolution', 203);
+
+            if (!in_array($resolution, [203, 300], true)) {
+                throw new InvalidRequestException('USPS supports ZPL labels at 203 or 300 DPI.');
+            }
+
+            return ['labelFormat' => $resolution === 300 ? 'ZPL300DPI' : 'ZPL203DPI'];
+        }
+
+        return ['labelFormat' => strtoupper($format)];
+    }
+
+    protected function getLabelFormatOptionPaths(): array
+    {
+        return ['labelFormat'];
     }
 
 

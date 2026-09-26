@@ -1,16 +1,15 @@
 <?php
 namespace verbb\shippy\carriers;
 
-use GuzzleHttp\Exception\RequestException;
-use Illuminate\Support\Arr;
-use Throwable;
 use verbb\shippy\Shippy;
 use verbb\shippy\events\LabelEvent;
 use verbb\shippy\events\RateEvent;
 use verbb\shippy\events\TrackingEvent;
 use verbb\shippy\exceptions\InvalidRequestException;
+use verbb\shippy\exceptions\UnsupportedLabelFormatException;
 use verbb\shippy\helpers\Json;
 use verbb\shippy\models\HttpClient;
+use verbb\shippy\models\Label;
 use verbb\shippy\models\LabelResponse;
 use verbb\shippy\models\Model;
 use verbb\shippy\models\Rate;
@@ -19,6 +18,11 @@ use verbb\shippy\models\Request;
 use verbb\shippy\models\Response;
 use verbb\shippy\models\Shipment;
 use verbb\shippy\models\TrackingResponse;
+
+use Throwable;
+
+use GuzzleHttp\Exception\RequestException;
+use Illuminate\Support\Arr;
 
 abstract class AbstractCarrier extends Model implements CarrierInterface
 {
@@ -58,6 +62,11 @@ abstract class AbstractCarrier extends Model implements CarrierInterface
     public static function supportsLabels(): bool
     {
         return true;
+    }
+
+    public static function getSupportedLabelFormats(): array
+    {
+        return [];
     }
     
     public static function getTrackingUrl(string $trackingNumber): ?string
@@ -225,6 +234,69 @@ abstract class AbstractCarrier extends Model implements CarrierInterface
             'svg' => 'image/svg+xml',
             'tif', 'tiff' => 'image/tiff',
             default => 'application/octet-stream',
+        };
+    }
+
+    /**
+     * @throws InvalidRequestException
+     * @throws UnsupportedLabelFormatException
+     */
+    protected function resolveLabelOptions(array $options): array
+    {
+        $labelOptions = [
+            'format' => Arr::pull($options, 'format'),
+            'resolution' => Arr::pull($options, 'resolution'),
+            'size' => Arr::pull($options, 'size'),
+        ];
+
+        $format = $this->normalizeLabelFormat((string)Arr::get($labelOptions, 'format'));
+
+        if (!$format) {
+            return $options;
+        }
+
+        // An explicit provider-native format takes precedence over the generic selection.
+        foreach ($this->getLabelFormatOptionPaths() as $path) {
+            if (Arr::has($options, $path)) {
+                return $options;
+            }
+        }
+
+        $supportedFormats = static::getSupportedLabelFormats();
+
+        if (!in_array($format, $supportedFormats, true)) {
+            $supported = $supportedFormats ? implode(', ', $supportedFormats) : 'none';
+
+            throw new UnsupportedLabelFormatException(sprintf(
+                '%s does not support the requested “%s” label format. Supported formats: %s.',
+                static::getName(),
+                $format,
+                $supported
+            ));
+        }
+
+        // Keep provider-specific options as the highest-precedence escape hatch.
+        return array_replace_recursive($this->getLabelFormatOptions($format, $labelOptions), $options);
+    }
+
+    protected function getLabelFormatOptions(string $format, array $labelOptions): array
+    {
+        return [];
+    }
+
+    protected function getLabelFormatOptionPaths(): array
+    {
+        return [];
+    }
+
+    protected function normalizeLabelFormat(string $format): string
+    {
+        return match (strtolower(trim($format))) {
+            'epl', 'epl2' => Label::FORMAT_EPL2,
+            'jpeg', 'jpg' => Label::FORMAT_JPG,
+            'tif', 'tiff' => Label::FORMAT_TIFF,
+            'zpl', 'zpl2', 'zplii' => Label::FORMAT_ZPL,
+            default => strtolower(trim($format)),
         };
     }
 

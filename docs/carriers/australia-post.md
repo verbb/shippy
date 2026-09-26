@@ -44,11 +44,11 @@ new AustraliaPost([
 ```
 
 ## Label Formats
-Australia Post creates labels as PDFs by default. You can request ZPL output by passing the provider's `format` option to the shipment's `getLabels()` method.
+Australia Post creates labels as PDFs by default. You can request ZPL output with the carrier-independent label options.
 
 ```php
 $labelResponse = $shipment->getLabels($rate, [
-    'format' => 'ZPL',
+    'format' => 'zpl',
 ]);
 ```
 

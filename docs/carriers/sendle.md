@@ -25,11 +25,12 @@ new Sendle([
 ```
 
 ## Label Formats
-Sendle provides PDF labels in cropped and full-page sizes. You can select a label from the order response by passing `labelSize` to the shipment's `getLabels()` method.
+Sendle provides PDF labels in cropped and full-page sizes. You can select a label from the order response with the carrier-independent label options.
 
 ```php
 $labelResponse = $shipment->getLabels($rate, [
-    'labelSize' => 'cropped',
+    'format' => 'pdf',
+    'size' => 'cropped',
 ]);
 ```
 

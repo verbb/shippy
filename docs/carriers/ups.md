@@ -29,17 +29,11 @@ new UPS([
 ```
 
 ## Label Formats
-UPS creates labels as GIF images by default. You can request another output type by passing UPS `LabelSpecification` values to the shipment's `getLabels()` method.
+UPS creates labels as GIF images by default. You can request another output type with the carrier-independent label options. Shippy selects 4 × 6 stock for printer-command formats automatically.
 
 ```php
 $labelResponse = $shipment->getLabels($rate, [
-    'LabelImageFormat' => [
-        'Code' => 'ZPL',
-    ],
-    'LabelStockSize' => [
-        'Height' => '6',
-        'Width' => '4',
-    ],
+    'format' => 'zpl',
 ]);
 ```
 

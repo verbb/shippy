@@ -35,6 +35,11 @@ class AustraliaPost extends AbstractCarrier
         return 'cm';
     }
 
+    public static function getSupportedLabelFormats(): array
+    {
+        return [Label::FORMAT_PDF, Label::FORMAT_ZPL];
+    }
+
     public static function isDomestic(string $countryCode): bool
     {
         return $countryCode === 'AU';
@@ -370,6 +375,7 @@ class AustraliaPost extends AbstractCarrier
     public function getLabels(Shipment $shipment, Rate $rate, array $options = []): ?LabelResponse
     {
         $this->validate('apiKey', 'password', 'accountNumber');
+        $options = $this->resolveLabelOptions($options);
 
         $payload = [
             'shipments' => [
@@ -526,6 +532,14 @@ class AustraliaPost extends AbstractCarrier
         ]);
     }
 
+
+    // Protected Methods
+    // =========================================================================
+
+    protected function getLabelFormatOptions(string $format, array $labelOptions): array
+    {
+        return ['format' => strtoupper($format)];
+    }
 
     // Private Methods
     // =========================================================================

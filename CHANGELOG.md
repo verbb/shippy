@@ -3,7 +3,7 @@
 ## Unreleased
 
 ### Added
-- Add configurable label output formats for Australia Post, Canada Post, FedEx, New Zealand Post, UPS, and USPS.
+- Add carrier-independent label format selection, shipment defaults, carrier capability discovery, and more output formats across supported carriers ([#22](https://github.com/verbb/shippy/issues/22)).
 - Add support for selecting cropped or full-page Sendle labels.
 
 ### Fixed

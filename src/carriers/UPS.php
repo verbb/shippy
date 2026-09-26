@@ -39,6 +39,11 @@ class UPS extends AbstractCarrier
         return ($shipment->getFrom()->getCountryCode() === 'US') ? 'in' : 'cm';
     }
 
+    public static function getSupportedLabelFormats(): array
+    {
+        return [Label::FORMAT_GIF, Label::FORMAT_ZPL, Label::FORMAT_EPL2, Label::FORMAT_SPL];
+    }
+
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
         return "https://wwwapps.ups.com/WebTracking/track?track=yes&trackNums={$trackingNumber}";
@@ -436,6 +441,7 @@ class UPS extends AbstractCarrier
     public function getLabels(Shipment $shipment, Rate $rate, array $options = []): ?LabelResponse
     {
         $this->validate('clientId', 'clientSecret', 'accountNumber');
+        $options = $this->resolveLabelOptions($options);
 
         $payload = [
             'ShipmentRequest' => [
@@ -651,6 +657,30 @@ class UPS extends AbstractCarrier
 
             return $providerPackage;
         }, $shipment->getPackages());
+    }
+
+    protected function getLabelFormatOptions(string $format, array $labelOptions): array
+    {
+        $code = $format === Label::FORMAT_EPL2 ? 'EPL' : strtoupper($format);
+        $options = [
+            'LabelImageFormat' => [
+                'Code' => $code,
+            ],
+        ];
+
+        if ($format !== Label::FORMAT_GIF) {
+            $options['LabelStockSize'] = [
+                'Height' => '6',
+                'Width' => '4',
+            ];
+        }
+
+        return $options;
+    }
+
+    protected function getLabelFormatOptionPaths(): array
+    {
+        return ['LabelImageFormat.Code'];
     }
 
 

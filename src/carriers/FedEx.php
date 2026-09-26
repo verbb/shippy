@@ -38,6 +38,11 @@ class FedEx extends AbstractCarrier
         return ($shipment->getFrom()->getCountryCode() === 'US') ? 'in' : 'cm';
     }
 
+    public static function getSupportedLabelFormats(): array
+    {
+        return [Label::FORMAT_PDF, Label::FORMAT_PNG, Label::FORMAT_ZPL, Label::FORMAT_EPL2];
+    }
+
     public static function isDomestic(Shipment $shipment): bool
     {
         return $shipment->getTo()->getCountryCode() === $shipment->getFrom()->getCountryCode();
@@ -327,6 +332,7 @@ class FedEx extends AbstractCarrier
     public function getLabels(Shipment $shipment, Rate $rate, array $options = []): ?LabelResponse
     {
         $this->validate('clientId', 'clientSecret', 'accountNumber');
+        $options = $this->resolveLabelOptions($options);
 
         $labelRequest = $this->getLabelRequest($shipment, $rate, $options);
 
@@ -576,6 +582,28 @@ class FedEx extends AbstractCarrier
                 'json' => $payload,
             ],
         ]);
+    }
+
+    protected function getLabelFormatOptions(string $format, array $labelOptions): array
+    {
+        $imageType = match ($format) {
+            Label::FORMAT_EPL2 => 'EPL2',
+            Label::FORMAT_ZPL => 'ZPLII',
+            default => strtoupper($format),
+        };
+
+        $options = ['imageType' => $imageType];
+
+        if (in_array($format, [Label::FORMAT_EPL2, Label::FORMAT_ZPL], true)) {
+            $options['labelStockType'] = 'STOCK_4X6';
+        }
+
+        return $options;
+    }
+
+    protected function getLabelFormatOptionPaths(): array
+    {
+        return ['imageType'];
     }
 
     protected function getAddress(Address $address): array

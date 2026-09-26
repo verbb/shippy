@@ -36,6 +36,11 @@ class CanadaPost extends AbstractCarrier
     {
         return 'cm';
     }
+
+    public static function getSupportedLabelFormats(): array
+    {
+        return [Label::FORMAT_PDF, Label::FORMAT_ZPL];
+    }
     
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
@@ -295,6 +300,7 @@ class CanadaPost extends AbstractCarrier
     public function getLabels(Shipment $shipment, Rate $rate, array $options = []): ?LabelResponse
     {
         $this->validate('username', 'password', 'customerNumber', 'contractId');
+        $options = $this->resolveLabelOptions($options);
 
         $mailingDate = (new DateTime())->modify('+1 day')->format('Y-m-d');
         $labelFormat = (string)Arr::get($options, 'encoding', 'PDF');
@@ -422,6 +428,26 @@ class CanadaPost extends AbstractCarrier
                 $this->username, $this->password,
             ],
         ]);
+    }
+
+
+    // Protected Methods
+    // =========================================================================
+
+    protected function getLabelFormatOptions(string $format, array $labelOptions): array
+    {
+        $options = ['encoding' => strtoupper($format)];
+
+        if ($format === Label::FORMAT_ZPL) {
+            $options['outputFormat'] = '4x6';
+        }
+
+        return $options;
+    }
+
+    protected function getLabelFormatOptionPaths(): array
+    {
+        return ['encoding'];
     }
 
 
