@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.2.25 - 2026-09-26
 
 ### Added
 - Add carrier-independent label format selection, shipment defaults, carrier capability discovery, and more output formats across supported carriers ([#22](https://github.com/verbb/shippy/issues/22)).
