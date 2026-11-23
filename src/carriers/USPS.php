@@ -47,7 +47,7 @@ class USPS extends AbstractCarrier
             Label::FORMAT_ZPL,
         ];
     }
-    
+
     public static function getTrackingUrl(string $trackingNumber): ?string
     {
         return "https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1={$trackingNumber}";
@@ -71,23 +71,23 @@ class USPS extends AbstractCarrier
                 'PRIORITY_MAIL__O2' => 'PMOD DSCF Half Tray Box',
                 'PRIORITY_MAIL__O3' => 'PMOD DSCF Extended Managed Mail Tray Box',
                 'PRIORITY_MAIL__O4' => 'PMOD DSCF Flat Tub Tray Box',
-                
+
                 'PRIORITY_MAIL_EXPRESS__E4' => 'Priority Mail Express Flat Rate Envelope',
                 'PRIORITY_MAIL_EXPRESS__FP' => 'Priority Mail Express Padded Flat Rate Envelope',
                 'PRIORITY_MAIL_EXPRESS__E6' => 'Priority Mail Express Legal Flat Rate Envelope',
                 'PRIORITY_MAIL_EXPRESS__E7' => 'Priority Mail Express Legal Flat Rate Envelope Holiday Delivery',
                 'PRIORITY_MAIL_EXPRESS__PA' => 'Priority Mail Express Single-piece',
-                
+
                 'USPS_GROUND_ADVANTAGE__SP' => 'USPS Ground Advantage Single-piece',
                 'USPS_GROUND_ADVANTAGE__CP' => 'USPS Ground Advantage Cubic Non-Soft Pack Tier 1',
                 'USPS_GROUND_ADVANTAGE__P5' => 'USPS Ground Advantage Cubic Soft Pack Tier 1',
                 'USPS_GROUND_ADVANTAGE__P6' => 'USPS Ground Advantage Cubic Soft Pack Tier 2',
-                
+
                 'SA__N5' => 'USPS Marketing Mail Nonprofit Parcels DSCF Nonprofit 5-digit',
                 'SA__ND' => 'USPS Marketing Mail Nonprofit Parcels Nonprofit NDC',
                 'SA__NT' => 'USPS Marketing Mail Nonprofit Parcels DSCF Nonprofit SCF',
                 'SA__NM' => 'USPS Marketing Mail Nonprofit Parcels Nonprofit Mixed NDC',
-                
+
                 'USPS_MARKETING_MAIL__NT' => 'USPS Marketing Mail Parcels DSCF Nonprofit SCF',
                 'USPS_MARKETING_MAIL__N5' => 'USPS Marketing Mail Parcels DSCF Nonprofit 5-digit',
                 'USPS_MARKETING_MAIL__BM' => 'USPS Marketing Mail Parcels NDC',
@@ -96,12 +96,12 @@ class USPS extends AbstractCarrier
                 'USPS_MARKETING_MAIL__5D' => 'USPS Marketing Mail Parcels DSCF 5-digit',
                 'USPS_MARKETING_MAIL__MB' => 'USPS Marketing Mail Parcels Mixed NDC',
                 'USPS_MARKETING_MAIL__NM' => 'USPS Marketing Mail Parcels Nonprofit Mixed NDC',
-                
+
                 'BOUND_PRINTED_MATTER__PR' => 'Bound Printed Matter DSCF Presorted',
-                
+
                 'LIBRARY_MAIL__BA' => 'Library Mail Basic',
                 'LIBRARY_MAIL__5D' => 'Library Mail 5-digit',
-                
+
                 'MEDIA_MAIL__BA' => 'Media Mail Basic',
                 'MEDIA_MAIL__5D' => 'Media Mail 5-digit',
             ],
@@ -157,6 +157,7 @@ class USPS extends AbstractCarrier
     public function setClientId(?string $clientId): USPS
     {
         $this->clientId = $clientId;
+
         return $this;
     }
 
@@ -168,6 +169,7 @@ class USPS extends AbstractCarrier
     public function setClientSecret(?string $clientSecret): USPS
     {
         $this->clientSecret = $clientSecret;
+
         return $this;
     }
 
@@ -179,6 +181,7 @@ class USPS extends AbstractCarrier
     public function setPriceType(?string $priceType): USPS
     {
         $this->priceType = $priceType;
+
         return $this;
     }
 
@@ -190,6 +193,7 @@ class USPS extends AbstractCarrier
     public function setAccountNumber(?string $accountNumber): USPS
     {
         $this->accountNumber = $accountNumber;
+
         return $this;
     }
 
@@ -201,6 +205,7 @@ class USPS extends AbstractCarrier
     public function setCustomerRegistrationId(?string $customerRegistrationId): USPS
     {
         $this->customerRegistrationId = $customerRegistrationId;
+
         return $this;
     }
 
@@ -212,6 +217,7 @@ class USPS extends AbstractCarrier
     public function setMailerId(?string $mailerId): USPS
     {
         $this->mailerId = $mailerId;
+
         return $this;
     }
 
@@ -223,6 +229,7 @@ class USPS extends AbstractCarrier
     public function setUseLegacyApi(bool $useLegacyApi): USPS
     {
         $this->useLegacyApi = $useLegacyApi;
+
         return $this;
     }
 
@@ -338,49 +345,58 @@ class USPS extends AbstractCarrier
     {
         $this->validate('clientId', 'clientSecret');
 
+        $trackingNumbers = array_map(fn($trackingNumber) => str_replace(' ', '', $trackingNumber), $trackingNumbers);
+
+        // Tracking 3.2 isn't offered on the legacy API
+        if ($this->getUseLegacyApi()) {
+            return $this->_getLegacyTrackingStatus($trackingNumbers);
+        }
+
         $data = [];
         $tracking = [];
 
-        foreach ($trackingNumbers as $trackingNumber) {
+        // Tracking 3.2 accepts up to 35 tracking numbers per request
+        foreach (array_chunk($trackingNumbers, 35) as $trackingNumbersChunk) {
             $request = new Request([
-                'method' => 'GET',
-                'endpoint' => 'tracking/v3/tracking/' . str_replace(' ', '', $trackingNumber),
+                'method' => 'POST',
+                'endpoint' => 'tracking/v3r2/tracking',
                 'payload' => [
-                    'query' => [
-                        'expand' => 'DETAIL',
-                    ],
+                    'json' => array_map(fn($trackingNumber) => ['trackingNumber' => $trackingNumber], $trackingNumbersChunk),
                 ],
             ]);
 
-            $data = $this->fetchTracking($request, function(Response $response) {
+            $statusCode = null;
+
+            $data = $this->fetchTracking($request, function(Response $response) use (&$statusCode) {
+                $statusCode = $response->getStatusCode();
+
                 return $response->json();
             });
 
-            $trackingNumber = Arr::get($data, 'trackingNumber', '');
-            $statusCode = Arr::get($data, 'statusCategory', '');
-            $status = $this->_mapTrackingStatus($statusCode);
+            // Apps not yet enabled for Tracking 3.2 can keep using Tracking 3.0 until it's retired in July 2027
+            if (in_array($statusCode, [401, 403], true)) {
+                return $this->_getLegacyTrackingStatus($trackingNumbers);
+            }
 
-            $tracking[] = new Tracking([
-                'carrier' => $this,
-                'response' => $data,
-                'trackingNumber' => $trackingNumber,
-                'status' => $status,
-                'estimatedDelivery' => null,
-                'details' => array_map(function($detail) {
-                    $location = array_filter([
-                        Arr::get($detail, 'eventCity', ''),
-                        Arr::get($detail, 'eventState', ''),
-                        Arr::get($detail, 'eventZIP', ''),
-                        Arr::get($detail, 'eventCountry', ''),
+            // Successful responses are a list of tracking results, one for each tracking number
+            $trackingResults = array_filter($data, fn($trackingResult, $key) => is_int($key) && is_array($trackingResult), ARRAY_FILTER_USE_BOTH);
+
+            foreach ($trackingResults as $trackingResult) {
+                // Multi-status responses include failures for individual tracking numbers
+                if (Arr::has($trackingResult, 'error')) {
+                    $tracking[] = new Tracking([
+                        'carrier' => $this,
+                        'response' => $trackingResult,
+                        'trackingNumber' => Arr::get($trackingResult, 'trackingNumber', ''),
+                        'status' => (string)Arr::get($trackingResult, 'statusCode') === '404' ? Tracking::STATUS_NOT_FOUND : Tracking::STATUS_ERROR,
+                        'errors' => [Arr::get($trackingResult, 'error.message', 'Unknown error')],
                     ]);
 
-                    return new TrackingDetail([
-                        'location' => implode(' ', $location),
-                        'description' => Arr::get($detail, 'eventType', ''),
-                        'date' => Arr::get($detail, 'eventTimestamp', ''),
-                    ]);
-                }, Arr::get($data, 'trackingEvents', [])),
-            ]);
+                    continue;
+                }
+
+                $tracking[] = $this->_parseTracking($trackingResult);
+            }
         }
 
         return new TrackingResponse([
@@ -512,7 +528,7 @@ class USPS extends AbstractCarrier
 
                 if (str_starts_with(strtolower($partContentType), 'application/json')) {
                     $responseData['data'] = Json::decode(Arr::get($multi, 'content'));
-                } else if (Arr::has($multi, 'content')) {
+                } elseif (Arr::has($multi, 'content')) {
                     $responseData['label'] = Arr::get($multi, 'content');
 
                     if ($partContentType) {
@@ -613,6 +629,61 @@ class USPS extends AbstractCarrier
 
     // Private Methods
     // =========================================================================
+
+    private function _getLegacyTrackingStatus(array $trackingNumbers): TrackingResponse
+    {
+        $data = [];
+        $tracking = [];
+
+        foreach ($trackingNumbers as $trackingNumber) {
+            $request = new Request([
+                'method' => 'GET',
+                'endpoint' => 'tracking/v3/tracking/' . $trackingNumber,
+                'payload' => [
+                    'query' => [
+                        'expand' => 'DETAIL',
+                    ],
+                ],
+            ]);
+
+            $data = $this->fetchTracking($request, function(Response $response) {
+                return $response->json();
+            });
+
+            $tracking[] = $this->_parseTracking($data);
+        }
+
+        return new TrackingResponse([
+            'response' => $data,
+            'tracking' => $tracking,
+        ]);
+    }
+
+    private function _parseTracking(array $data): Tracking
+    {
+        return new Tracking([
+            'carrier' => $this,
+            'response' => $data,
+            'trackingNumber' => Arr::get($data, 'trackingNumber', ''),
+            'status' => $this->_mapTrackingStatus(Arr::get($data, 'statusCategory', '')),
+            'estimatedDelivery' => null,
+            'details' => array_map(function($detail) {
+                $location = array_filter([
+                    Arr::get($detail, 'eventCity', ''),
+                    Arr::get($detail, 'eventState', ''),
+                    // Tracking 3.2 renamed `eventZIP` to `eventZIPCode`
+                    Arr::get($detail, 'eventZIPCode', Arr::get($detail, 'eventZIP', '')),
+                    Arr::get($detail, 'eventCountry', ''),
+                ]);
+
+                return new TrackingDetail([
+                    'location' => implode(' ', $location),
+                    'description' => Arr::get($detail, 'eventType', ''),
+                    'date' => Arr::get($detail, 'eventTimestamp', ''),
+                ]);
+            }, Arr::get($data, 'trackingEvents') ?? []),
+        ]);
+    }
 
     private function _mapTrackingStatus(string $status): string
     {
