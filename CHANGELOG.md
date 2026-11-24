@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.2.26 - 2026-11-24
 
 ### Changed
 - USPS tracking now uses the Tracking 3.2 API, which looks up to 35 tracking numbers per request. Apps without Tracking 3.2 access, and the legacy API, continue to use Tracking 3.0 until USPS retires it on July 31, 2027 ([#24](https://github.com/verbb/shippy/issues/24)).
